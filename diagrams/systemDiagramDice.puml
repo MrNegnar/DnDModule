@@ -1,0 +1,12 @@
+@startuml systemDiagramDice
+
+left to right direction
+
+actor User
+component DiceSystem
+
+User --> DiceSystem : Roll Dice
+DiceSystem --> User : Return Dice Result
+
+
+@enduml
