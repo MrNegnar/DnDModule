@@ -1,0 +1,80 @@
+@startuml classDiagram
+Title Class Diagram for dnd module
+
+class Dice {
+  +roll(quantity: int, sides: int): array[int]
+}
+
+class offensive {
+  +attack(): int
+}
+
+class defensive {
+  +defend(): int
+}
+
+class character {
+  -name: string
+  -level: int
+  -offensiveBonuses: offensive
+  -defensiveBonuses: defensive
+  -savingThrows: array[int]
+  -hitPoints: int
+  -manaPoints: int
+  -experiencePoints: int
+  -inventory: array[string]
+  -spells: array[string]
+  -skills: array[string]
+  -equipment: array[string]
+  -gold: int
+  -alignment: string
+  -background: string
+  -race: string
+  -class: string
+  -feats: array[string]
+  -traits: array[string]
+  -proficiencies: array[string]
+  +getName(): string
+  +getLevel(): int
+  +getOffensiveBonuses(): offensive
+  +getDefensiveBonuses(): defensive
+  +getSavingThrows(): array[int]
+  +getHitPoints(): int
+  +getManaPoints(): int
+  +getExperiencePoints(): int
+  +getInventory(): array[string]
+  +getSpells(): array[string]
+  +getSkills(): array[string]
+  +getEquipment(): array[string]
+  +getGold(): int
+  +getAlignment(): string
+  +getBackground(): string
+  +getRace(): string
+  +getClass(): string
+  +getFeats(): array[string]
+  +getTraits(): array[string]
+  +getProficiencies(): array[string]
+  -setName(name: string): void
+  -setLevel(level: int): void
+  -setOffensiveBonuses(offensiveBonuses: offensive): void
+  -setDefensiveBonuses(defensiveBonuses: defensive): void
+  -setSavingThrows(savingThrows: array[int]): void
+  -setHitPoints(hitPoints: int): void
+  -setManaPoints(manaPoints: int): void
+  -setExperiencePoints(experiencePoints: int): void
+  -setInventory(inventory: array[string]): void
+  -setSpells(spells: array[string]): void
+  -setSkills(skills: array[string]): void
+  -setEquipment(equipment: array[string]): void
+  -setGold(gold: int): void
+  -setAlignment(alignment: string): void
+  -setBackground(background: string): void
+  -setRace(race: string): void
+  -setClass(class: string): void
+  -setFeats(feats: array[string]): void
+  -setTraits(traits: array[string]): void
+  -setProficiencies(proficiencies: array[string]): void
+}
+
+
+@enduml
