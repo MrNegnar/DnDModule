@@ -6,11 +6,14 @@ class Dice {
   +roll(quantity: int, sides: int): array[int]
 }
 
-Interface offensive {
+Interface Offensive {
+  +checkIfHit(): boolean
+  +calculateDamage(attackRoll: int, attackPower: int): int
   +attack(): int
 }
 
-Interface defensive {
+Interface Defensive {
+  +calculateDamageTaken(attackPower: int): int
   +defend(): int
 }
 
@@ -36,12 +39,7 @@ class Enemy extends Character {
 
 }
 
-class Npc extends Character {
-
-}
-
-
 Character --> Dice : rolls
-
+Character --> Offensive : uses
 
 @enduml
