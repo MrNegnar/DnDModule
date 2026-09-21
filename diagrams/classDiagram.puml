@@ -25,6 +25,7 @@ abstract class Character {
   -setMaxHitPoints(maxHitPoints: int, currentHitPoints: int): void
   -setCurrentHitPoints(currentHitPoints: int): void
   +attack(target: Character, dice: Dice): int
+  +takeDamage(amount: int): void
 }
 
 class Player extends Character {
