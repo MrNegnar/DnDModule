@@ -4,6 +4,7 @@ Title Class Diagram for dnd module
 class Dice {
   -dice: Array[int]
   +roll(quantity: int, sides: int): array[int]
+  +howMManyDice(maximum: int): int
 }
 
 Interface Offensive {
@@ -39,7 +40,25 @@ class Enemy extends Character {
 
 }
 
+class FightEncounterHandler {
+  -players: Array[Player]
+  -enemies: Array[Enemy]
+  +startEncounter(): void
+  +addPlayer(player: Player): void
+  +addEnemy(enemy: Enemy): void
+  +removePlayer(player: Player): void
+  +removeEnemy(enemy: Enemy): void
+  +getPlayers(): Array[Player]
+  +getEnemies(): Array[Enemy]
+  +getAllParticipants(): Array[Character]
+  +decideTurnOrder(): Array[Character]
+  +getCurrentTurn(): Character
+  +endEncounter(): void
+}
+
 Character --> Dice : rolls
 Character --> Offensive : uses
+Character --> Defensive : uses
+Character -->FightEncounterHandler : fights during
 
 @enduml

@@ -1,6 +1,6 @@
-import { Offensive } from "../behaiviors/offensive";
-import { Defensive } from "../behaiviors/defensive";
-import Dice from "../dice/Dice";
+import { Offensive } from "../behaviors/offensive.js";
+import { Defensive } from "../behaviors/defensive.js";
+import { Dice } from "../dice/Dice.js";
 /**
  * Represents a character in the game with basic attributes like name and hit points.
  */
@@ -16,15 +16,14 @@ export abstract class Character {
    * Creates a new character with the specified name and hit points.
    *
    * @param name - The name of the character.
-   * @param maxHitPoints - The total number of hit points a character has.
    * @param attackPower - The attack power of the character.
+   * @param attacksPerTurn - How many attacks that can be done per turn by the character.
    */
-  constructor(name: string, maxHitPoints: number) {
+  constructor(name: string, attackPower: number, attacksPerTurn: number) {
     this.setName(name);
-    this.setMaxHitPoints(maxHitPoints);
-    this.currentHitPoints = maxHitPoints;
-    this.attackPower = 10;
-    this.attacksPerTurn = 1;
+    this.setInitialHitPoints();
+    this.attackPower = attackPower;
+    this.attacksPerTurn = attacksPerTurn;
     this.isAlive = true;
   }
 
@@ -91,16 +90,24 @@ export abstract class Character {
   }
 
   /**
+   * Setting the total amount of hp for a character when created.
+   * 
+   */
+  private setInitialHitPoints(): void {
+    const startingHitPoints: number[] =  new Dice().rollDice(4, 6); // Example: roll 4 six-sided dice to determine starting hit points
+    let totalStartingHitPoints = 0;
+    for (const healthPoints of startingHitPoints) {
+      totalStartingHitPoints += healthPoints;
+    }
+    this.maxHitPoints = totalStartingHitPoints;
+    this.currentHitPoints = this.maxHitPoints;
+  }
+
+  /**
    * Sets the maximum hit points of the character.
    *
-   * @param maxHitPoints - The new maximum hit points of the character.
    */
-  private setMaxHitPoints(maxHitPoints: number): void {
-    if (maxHitPoints <= 0) {
-      throw new Error("Invalid maximum hit points");
-    } else {
-      this.maxHitPoints = maxHitPoints;
-    }
+  private setMaxHitPoints(): void {
   }
 
   /**

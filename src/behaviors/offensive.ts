@@ -1,5 +1,9 @@
-import Dice from "../dice/Dice";
-import Character from "../character/Character";
+import { Dice } from "../dice/Dice.js";
+import { Character } from "../character/Character.js";
+
+/**
+ * Represents the offensive behavior of a character, including attack and damage calculation.
+ */
 export class Offensive {
 
   /**
@@ -7,8 +11,8 @@ export class Offensive {
    *
    * @returns true if the attack hits, false otherwise.
    */
-  checkIfHit() {
-    return Dice.roll(1, 20) > 10; // Example: hit if roll is greater than 10
+  public checkIfHit() {
+    return Dice.rollDice(1, 20) > 10; // Example: hit if roll is greater than 10
   }
 
   /**
