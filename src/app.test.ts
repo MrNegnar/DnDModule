@@ -1,42 +1,24 @@
-import { describe, it, expect } from 'vitest'
-import { generateGreeting, parseArgs } from './app.js'
+import { afterEach, describe, it, expect, vi } from 'vitest'
+import { Player } from './character/Player.js'
+import { Enemy } from './character/Enemy.js'
 
-describe('parseArgs()', () => {
-  it('should return the first positional argument', () => {
-    expect(parseArgs(['Ada Lovelace'])).toBe('Ada Lovelace')
-  })
-
-  it('should return undefined when no arguments are given', () => {
-    expect(parseArgs([])).toBeUndefined()
-  })
+afterEach(() => {
+  vi.restoreAllMocks()
 })
 
-describe('generateGreeting()', () => {
-  it('should return a personalized greeting when a valid name is provided', () => {
-    const result = generateGreeting('Ada Lovelace')
-    expect(result).toBe('Hello, Ada Lovelace!')
-  })
+it.each([
+  { randomValue: 0, expectedHp: 4},
+  { randomValue: 0.9, expectedHp: 24},
+])("rolls $randomValue to get a total of $expectedHp initial HP", ({ randomValue, expectedHp }) => {
+  vi.spyOn(Math, 'random').mockReturnValue(randomValue);
 
-  it('should return a greeting for Brian Kernighan when no argument is passed', () => {
-    const result = generateGreeting()
-    expect(result).toBe('Hello, Brian Kernighan!')
-  })
+  const player = new Player("Krulle", 10, 1);
 
-  it('should return a guest greeting when the input is an empty or blank string', () => {
-    // Testing edge cases handled by name.trim()
-    expect(generateGreeting('')).toBe('Hello, Guest!')
-    expect(generateGreeting('   ')).toBe('Hello, Guest!')
-  })
+  expect(player.getMaxHitPoints()).toBe(expectedHp);
+});
 
-  it('should return a guest greeting when the input is not a string data type', () => {
-    // The type system rules this out at compile time; the guard clause is what
-    // protects the function at runtime against values that bypass it (e.g. from
-    // untyped callers, JSON.parse output, or other JS consumers of this module).
-    // @ts-expect-error - intentionally passing a non-string to exercise the guard
-    expect(generateGreeting(123)).toBe('Hello, Guest!')
-    // @ts-expect-error - intentionally passing a non-string to exercise the guard
-    expect(generateGreeting(null)).toBe('Hello, Guest!')
-    // @ts-expect-error - intentionally passing a non-string to exercise the guard
-    expect(generateGreeting(true)).toBe('Hello, Guest!')
-  })
-})
+it("starts with current HP equal to maximum HP", () => {
+  const player = new Player("Krulle", 10, 1);
+
+  expect(player.getCurrentHitPoints()).toBe(player.getMaxHitPoints());
+});
