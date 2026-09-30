@@ -16,7 +16,8 @@ export class FightEncounderHandler {
    * @param player the player character participating in the fight.
    * @param enemy the enemy character participating in the fight.
    */
-  constructor(private player: Character, private enemy: Character) {
+  constructor(characterList: (Player | Enemy)[]) {
+    this.fightParticipants = characterList;
   }
 
   /**

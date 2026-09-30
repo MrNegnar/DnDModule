@@ -27,12 +27,14 @@ function main(): void {
     const player1 = new Player("Krulle", 10, 2)
     console.log(player1);
     const enemy1 = new Enemy("Goblin", 8, 1)
+    const enemy2 = new Enemy("Orc", 12, 2)
     console.log(enemy1);
     console.log("Starting fight...");
-    const fight = new FightEncounderHandler(player1, enemy1)
+    const fighters = [player1, enemy1]; 
+    const fight = new FightEncounderHandler(fighters)
     fight.startFight();
     console.log(fight.getFightMembers());
-    
+    console.log(`Player HP: ${player1.getCurrentHitPoints()}, Enemy HP: ${enemy1.getCurrentHitPoints()}`);
   } catch (error) {
     console.error('An unexpected error occurred during execution:', (error as Error).message)
     process.exitCode = 1

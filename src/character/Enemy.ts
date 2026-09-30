@@ -12,6 +12,6 @@ export class Enemy extends Character {
    * @param attacksPerTurn - The number of attacks the enemy character can perform per turn.
    */
   constructor(name: string, attackPower: number, attacksPerTurn: number) {
-    super(name, attackPower, attacksPerTurn);
+    super(name, attackPower, attacksPerTurn, 4, 4);
   }
 }

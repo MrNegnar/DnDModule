@@ -1,5 +1,4 @@
 import { Character } from "./Character.js";
-
 /**
  * Represents a player character in the game, extending the base Character class.
  */
@@ -12,6 +11,6 @@ export class Player extends Character {
    * @param attacksPerTurn - The number of attacks the player character can perform per turn.
    */
   constructor(name: string, attackPower: number, attacksPerTurn: number) {
-    super(name, attackPower, attacksPerTurn);
+    super(name, attackPower, attacksPerTurn, 4, 6);
   }
 }

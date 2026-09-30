@@ -5,9 +5,9 @@ import { Dice } from "../dice/Dice.js";
  * Represents a character in the game with basic attributes like name and hit points.
  */
 export abstract class Character {
-  private name: string;
-  private maxHitPoints: number;
-  private currentHitPoints: number;
+  private name!: string;
+  private maxHitPoints!: number;
+  private currentHitPoints!: number;
   private isAlive: boolean;
   private attacksPerTurn: number;
   private attackPower: number;
@@ -19,10 +19,12 @@ export abstract class Character {
    * @param name - The name of the character.
    * @param attackPower - The attack power of the character.
    * @param attacksPerTurn - How many attacks that can be done per turn by the character.
+   * @param startHpNumberOfDice - The number of dice to roll for determining initial hit points.
+   * @param startHpSidesPerDie - The number of sides on each die for determining initial hit points.
    */
-  constructor(name: string, attackPower: number, attacksPerTurn: number) {
+  constructor(name: string, attackPower: number, attacksPerTurn: number, startHpNumberOfDice: number, startHpSidesPerDie: number) {
     this.setName(name);
-    this.setInitialHitPoints();
+    this.setInitialHitPoints(startHpNumberOfDice, startHpSidesPerDie);
     this.attackPower = attackPower;
     this.attacksPerTurn = attacksPerTurn;
     this.numberOfAttacks = 1;
@@ -101,10 +103,12 @@ export abstract class Character {
 
   /**
    * Setting the total amount of hp for a character when created.
-   * 
+   *
+   * @param numberOfDice - The number of dice to roll for determining initial hit points.
+   * @param sidesPerDie - The number of sides on each die.
    */
-  private setInitialHitPoints(): void {
-    const startingHitPoints: number[] =  new Dice().rollDice(4, 6); // Example: roll 4 six-sided dice to determine starting hit points
+  private setInitialHitPoints(numberOfDice: number, sidesPerDie: number): void {
+    const startingHitPoints: number[] =  new Dice().rollDice(numberOfDice, sidesPerDie); // Example: roll 4 six-sided dice to determine starting hit points
     let totalStartingHitPoints = 0;
     for (const healthPoints of startingHitPoints) {
       totalStartingHitPoints += healthPoints;
@@ -114,11 +118,11 @@ export abstract class Character {
   }
 
   /**
-   * Sets the maximum hit points of the character.
+   * adds hit points to the character's maximum hit points.
    *
+   * @param addingHitPoints - The amount of hit points to add to the character's maximum hit points.
    */
-  private setMaxHitPoints(): void {
-    const addingHitPoints: number =  new Dice().rollDice(1, 10)[0];
+  private setMaxHitPoints(addingHitPoints: number): void {
     this.maxHitPoints += addingHitPoints;
   }
 
