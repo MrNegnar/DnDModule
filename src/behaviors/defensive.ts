@@ -1,5 +1,3 @@
-import { Character } from "../character/Character.js";
-
 /**
  * Represents the defensive behavior of a character, including damage mitigation.
  */

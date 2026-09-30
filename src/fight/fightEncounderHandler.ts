@@ -7,17 +7,20 @@ import { Character } from "../character/Character.js";
  */
 export class FightEncounderHandler {
   
-  public fightParticipants: (Player | Enemy)[] = [];
+  public playerFighters: Player[] = [];
+  public enemyFighters: Enemy[] = [];
+  public fightParticipants: Character[] = [];
   private currentTurnIndex: number = 0;
 
   /**
    * Initializes the fight encounter handler by combining players and enemies into the fight members list.
    *
-   * @param player the player character participating in the fight.
-   * @param enemy the enemy character participating in the fight.
+   * @param characterList - An array of characters (players and enemies) participating in a fight.
    */
-  constructor(characterList: (Player | Enemy)[]) {
-    this.fightParticipants = characterList;
+  constructor(playerFighters: Player[], enemyFighters: Enemy[]) {
+    this.playerFighters = playerFighters;
+    this.enemyFighters = enemyFighters;
+    this.fightParticipants = [...playerFighters, ...enemyFighters];
   }
 
   /**
@@ -25,7 +28,7 @@ export class FightEncounderHandler {
    *
    * @returns an array of all fight members in the encounter.
    */
-  public getFightMembers(): (Player | Enemy)[] {
+  public getFightMembers(): Character[] {
     return this.fightParticipants;
   }
 
@@ -33,48 +36,46 @@ export class FightEncounderHandler {
    * Starts the fight encounter by initializing the fight participants and determining the fight order.
    */
   public startFight() {
-    this.fightParticipants = [this.player as Player, this.enemy as Enemy];
     this.setFightOrder();
-    this.startTurn(this.fightParticipants);
+    this.startTurn();
   }
 
   /**
    * Determines the order in which players and enemies will take their turns in the fight encounter.
    */
   private setFightOrder() {
-    this.fightParticipants.sort((a, b) => b.getAttacksPerTurn() - a.getAttacksPerTurn());
+    this.fightParticipants.sort((a, b) => b.getSpeed() - a.getSpeed());
   }
 
   /**
    * Starts the turn for the current participant in the fight encounter.
-   *
-   * @param fightParticipants The array of fight participants for the current turn.
    */
-  private startTurn(fightParticipants: (Player | Enemy)[]) {
+  private startTurn() {
     do {
-      for (let i = 0; i < fightParticipants.length; i++) {
-      const currentParticipant = fightParticipants[i];
+      for (let i = 0; i < this.fightParticipants.length; i++) {
+      const currentParticipant = this.fightParticipants[i];
       if (currentParticipant.getIsAlive() === false) {
         continue;
       }
       console.log(`It's ${currentParticipant.getName()}'s turn.`);
       if (currentParticipant instanceof Player) {
-        currentParticipant.attack(this.enemy as Enemy);
+        const target = this.enemyFighters.find((member) => member.getIsAlive());
+        if (target) {
+          currentParticipant.attack(target); 
+        } else {
+          break;
+        }
       } else {
-        currentParticipant.attack(this.player as Player);
+        const target = this.playerFighters.find((member) => member.getIsAlive());
+        if (target) {
+          currentParticipant.attack(target);
+        } else {
+          break;
+        }
       }
     }
-    } while (this.player.getIsAlive() && this.enemy.getIsAlive());
+    } while (this.playerFighters.some(player => player.getIsAlive()) && this.enemyFighters.some(enemy => enemy.getIsAlive()));
     console.log("The fight has ended.");
 
   }
-
-  /**
-   * When it is the player's turn, this method handles the player's turn choice and executes the attack on the enemy.
-   */
-  public playerTurnChoice(): void {
-    console.log(`${this.player.getName()} is making a turn choice.`);
-    (this.player as Player).attack(this.enemy as Enemy);
-  }
-
 }

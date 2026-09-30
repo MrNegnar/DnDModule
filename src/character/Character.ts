@@ -12,6 +12,7 @@ export abstract class Character {
   private attacksPerTurn: number;
   private attackPower: number;
   private numberOfAttacks: number;
+  private speed: number;
 
   /**
    * Creates a new character with the specified name and hit points.
@@ -29,6 +30,16 @@ export abstract class Character {
     this.attacksPerTurn = attacksPerTurn;
     this.numberOfAttacks = 1;
     this.isAlive = true;
+    this.speed = 1;
+  }
+
+  /**
+   * Gets the speed of the character.
+   *
+   * @returns the speed of the given character.
+   */
+  public getSpeed(): number {
+    return this.speed;
   }
 
   /**
@@ -165,7 +176,7 @@ export abstract class Character {
       totalDamage = dieResult.reduce((sum, val) => sum + val, 0);
       target.defend(totalDamage);
     } else {
-      console.log("allt är misslyckat!!!");
+      console.log(`${this.getName()}'s attack missed.`);
     }
   }
 
