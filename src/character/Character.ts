@@ -11,6 +11,7 @@ export abstract class Character {
   private isAlive: boolean;
   private attacksPerTurn: number;
   private attackPower: number;
+  private numberOfAttacks: number;
 
   /**
    * Creates a new character with the specified name and hit points.
@@ -24,6 +25,7 @@ export abstract class Character {
     this.setInitialHitPoints();
     this.attackPower = attackPower;
     this.attacksPerTurn = attacksPerTurn;
+    this.numberOfAttacks = 1;
     this.isAlive = true;
   }
 
@@ -64,6 +66,15 @@ export abstract class Character {
   }
 
   /**
+   * Gets the number of attacks the character can perform per turn.
+   *
+   * @returns the number of attacks per turn for the given character.
+   */
+  public getAttacksPerTurn(): number {
+    return this.attacksPerTurn;
+  }
+
+  /**
    * Checks if the character is alive based on current hit points.
    *
    * @returns true if the character is alive, false otherwise.
@@ -71,7 +82,6 @@ export abstract class Character {
   public getIsAlive(): boolean {
     if (this.currentHitPoints <= 0) {
       this.isAlive = false;
-      console.log(`${this.name} has died.`);
     }
     return this.isAlive;
   }
@@ -108,6 +118,8 @@ export abstract class Character {
    *
    */
   private setMaxHitPoints(): void {
+    const addingHitPoints: number =  new Dice().rollDice(1, 10)[0];
+    this.maxHitPoints += addingHitPoints;
   }
 
   /**
@@ -140,11 +152,16 @@ export abstract class Character {
    */
   public attack(target: Character): void {
     let totalDamage = 0;
-    let dieResult = 0;
-    if (Offensive.checkIfHit()) {
-      dieResult = Dice.roll(this.attacksPerTurn, this.attackPower);
-      totalDamage = Offensive.calculateDamage(dieResult);
-      Offensive.attack(target, totalDamage);
+    let dieResult: number[];
+    if (new Dice().checkIfAttackHit()) {
+      dieResult = new Dice().rollDice(this.numberOfAttacks, this.attackPower);
+      for (const die of dieResult) {
+        totalDamage += die;
+      }
+      totalDamage = dieResult.reduce((sum, val) => sum + val, 0);
+      target.defend(totalDamage);
+    } else {
+      console.log("allt är misslyckat!!!");
     }
   }
 
@@ -155,8 +172,9 @@ export abstract class Character {
    * @param damage - the incoming damage to be processed by the character's defense.
    */
   public defend(damage: number): void {
-    let damageToTake = 0;
-    damageToTake = Defensive.calculateDamageTaken(damage);
+    console.log(`Incoming damage: ${damage}`);
+    const damageToTake = new Defensive().calculateDamageTaken(damage);
+    console.log(`Damage to take after defense: ${damageToTake}`);
     this.takeDamage(damageToTake);
   }
 }

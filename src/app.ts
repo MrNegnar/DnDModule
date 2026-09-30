@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import { Player } from "./character/Player.js";
+import { Enemy } from "./character/Enemy.js";
+import { FightEncounderHandler } from "./fight/fightEncounderHandler.js";
 
 /**
  * Extracts the name argument from the command line.
@@ -24,6 +26,13 @@ function main(): void {
   try {
     const player1 = new Player("Krulle", 10, 2)
     console.log(player1);
+    const enemy1 = new Enemy("Goblin", 8, 1)
+    console.log(enemy1);
+    console.log("Starting fight...");
+    const fight = new FightEncounderHandler(player1, enemy1)
+    fight.startFight();
+    console.log(fight.getFightMembers());
+    
   } catch (error) {
     console.error('An unexpected error occurred during execution:', (error as Error).message)
     process.exitCode = 1

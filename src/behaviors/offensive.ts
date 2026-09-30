@@ -12,7 +12,8 @@ export class Offensive {
    * @returns true if the attack hits, false otherwise.
    */
   public checkIfHit() {
-    return Dice.rollDice(1, 20) > 10; // Example: hit if roll is greater than 10
+    const dice = new Dice();
+    return dice.rollDice(1, 20)[0] > 10; // Example: hit if roll is greater than 10
   }
 
   /**
