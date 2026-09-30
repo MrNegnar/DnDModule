@@ -21,3 +21,26 @@ it("starts with current HP equal to maximum HP", () => {
 
   expect(player.getCurrentHitPoints()).toBe(player.getMaxHitPoints());
 });
+
+describe("Player taking damage", () => {
+  it("reduces current HP when taking damage", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const player = new Player("Krulle", 10, 1);
+    
+    player.defend(5);
+
+    expect(player.getCurrentHitPoints()).toBe(1);
+    expect(player.getIsAlive()).toBe(true);
+  });
+
+  it("Sets characters as not alive when current HP reaches 0", () => {
+    vi.spyOn(Math, "random").mockReturnValue(0);
+    const player = new Player("Krulle", 10, 1);
+
+    player.defend(6);
+
+    expect(player.getCurrentHitPoints()).toBe(0);
+    expect(player.getIsAlive()).toBe(false);
+  });
+
+});

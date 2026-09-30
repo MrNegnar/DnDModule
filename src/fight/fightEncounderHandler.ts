@@ -49,6 +49,7 @@ export class FightEncounderHandler {
 
   /**
    * Starts the turn for the current participant in the fight encounter.
+   * handles to much logic atm. is gonna get separeted into smaller methods for better readability and maintainability.
    */
   private startTurn() {
     do {
