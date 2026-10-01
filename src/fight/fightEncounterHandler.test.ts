@@ -20,7 +20,7 @@ describe("FightEncounderHandler", () => {
 
     expect(player.getIsAlive()).toBe(true);
     expect(enemy.getIsAlive()).toBe(false);
-  })
+  });
 
     it("Fight encounter ends when player 'team' is defeated", () => {
     vi.spyOn(Math, "random").mockReturnValue(0.9);
@@ -34,5 +34,31 @@ describe("FightEncounderHandler", () => {
 
     expect(player.getIsAlive()).toBe(false);
     expect(enemy.getIsAlive()).toBe(true);
-  })
+  });
+
+  it("player starts fight when having a higher speed attribute than the enemy", () => {
+    const player = new Player("Krulle", 10, 1);
+    const enemy = new Enemy("Goblin", 6, 1);
+
+    vi.spyOn(player, "getSpeed").mockReturnValue(2);
+    vi.spyOn(enemy, "getSpeed").mockReturnValue(1);
+
+    const fight = new FightEncounderHandler([player], [enemy]);
+    fight.startFight();
+
+    expect(fight.getFightMembers()[0]).toBe(player);
+  });
+
+    it("enemy starts fight when having a higher speed attribute than the player", () => {
+    const player = new Player("Krulle", 10, 1);
+    const enemy = new Enemy("Goblin", 6, 1);
+
+    vi.spyOn(player, "getSpeed").mockReturnValue(1);
+    vi.spyOn(enemy, "getSpeed").mockReturnValue(2);
+
+    const fight = new FightEncounderHandler([player], [enemy]);
+    fight.startFight();
+
+    expect(fight.getFightMembers()[0]).toBe(enemy);
+  });
 })
