@@ -1,4 +1,3 @@
-import { Offensive } from "../behaviors/offensive.js";
 import { Defensive } from "../behaviors/defensive.js";
 import { Dice } from "../dice/Dice.js";
 /**

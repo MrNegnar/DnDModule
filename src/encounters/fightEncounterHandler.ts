@@ -5,7 +5,7 @@ import { Character } from "../character/Character.js";
 /**
  * Handles the logic for managing fight encounters in the game.
  */
-export class FightEncounderHandler {
+export class fightEncounterHandler {
   
   public playerFighters: Player[] = [];
   public enemyFighters: Enemy[] = [];
@@ -15,7 +15,8 @@ export class FightEncounderHandler {
   /**
    * Initializes the fight encounter handler by combining players and enemies into the fight members list.
    *
-   * @param characterList - An array of characters (players and enemies) participating in a fight.
+   * @param playerFighters - An array of player characters participating in the fight.
+   * @param enemyFighters - An array of enemy characters participating in the fight.
    */
   constructor(playerFighters: Player[], enemyFighters: Enemy[]) {
     this.playerFighters = playerFighters;
@@ -48,8 +49,7 @@ export class FightEncounderHandler {
   }
 
   /**
-   * Starts the turn for the current participant in the fight encounter.
-   * handles to much logic atm. is gonna get separeted into smaller methods for better readability and maintainability.
+   * Starts the turn foethods for better readability and maintainability.
    */
   private startTurn() {
     do {
@@ -60,12 +60,7 @@ export class FightEncounderHandler {
       }
       console.log(`It's ${currentParticipant.getName()}'s turn.`);
       if (currentParticipant instanceof Player) {
-        const target = this.enemyFighters.find((member) => member.getIsAlive());
-        if (target) {
-          currentParticipant.attack(target); 
-        } else {
-          break;
-        }
+        this.handlePlayerTurn(currentParticipant); 
       } else {
         const target = this.playerFighters.find((member) => member.getIsAlive());
         if (target) {
@@ -77,6 +72,17 @@ export class FightEncounderHandler {
     }
     } while (this.playerFighters.some(player => player.getIsAlive()) && this.enemyFighters.some(enemy => enemy.getIsAlive()));
     console.log("The fight has ended.");
+  }
 
+  /**
+   * Handles the logic for a player's turn during the fight encounter.
+   *
+   * @param player - The player character whose turn is being handled.
+   */
+  private handlePlayerTurn(player: Player) {
+        const target = this.enemyFighters.find((member) => member.getIsAlive());
+        if (target) {
+          player.attack(target); 
+        }
   }
 }

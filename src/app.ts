@@ -2,7 +2,7 @@
 
 import { Player } from "./character/Player.js";
 import { Enemy } from "./character/Enemy.js";
-import { FightEncounderHandler } from "./fight/fightEncounderHandler.js";
+import { fightEncounterHandler } from "./encounters/fightEncounterHandler.js";
 
 /**
  * Extracts the name argument from the command line.
@@ -32,7 +32,7 @@ function main(): void {
     console.log("Starting fight...");
     const playerFighters = [player1];
     const enemyFighters = [enemy1, enemy2]; 
-    const fight = new FightEncounderHandler(playerFighters, enemyFighters)
+    const fight = new fightEncounterHandler(playerFighters, enemyFighters)
     fight.startFight();
     console.log(fight.getFightMembers());
     for (const member of fight.getFightMembers()) {
