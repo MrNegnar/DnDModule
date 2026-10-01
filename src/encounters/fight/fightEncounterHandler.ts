@@ -1,6 +1,6 @@
-import { Player } from "../character/Player.js";
-import { Enemy } from "../character/Enemy.js";
-import { Character } from "../character/Character.js";
+import { Player } from "../../character/Player.js";
+import { Enemy } from "../../character/Enemy.js";
+import { Character } from "../../character/Character.js";
 
 /**
  * Handles the logic for managing fight encounters in the game.

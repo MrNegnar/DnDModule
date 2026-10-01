@@ -2,7 +2,7 @@
 
 import { Player } from "./character/Player.js";
 import { Enemy } from "./character/Enemy.js";
-import { fightEncounterHandler } from "./encounters/fightEncounterHandler.js";
+import { fightEncounterHandler } from "./encounters/fight/fightEncounterHandler.js";
 
 /**
  * Extracts the name argument from the command line.

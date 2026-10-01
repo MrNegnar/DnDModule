@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { Player } from "../character/Player.js";
-import { Enemy } from "../character/Enemy.js";
+import { Player } from "../../character/Player.js";
+import { Enemy } from "../../character/Enemy.js";
 import { fightEncounterHandler } from "./fightEncounterHandler.js";
 
 afterEach(() => {
