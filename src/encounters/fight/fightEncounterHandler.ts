@@ -34,6 +34,26 @@ export class fightEncounterHandler {
   }
 
   /**
+   * Gets the list of living team members that are still alive in the fight encounter.
+   * Filters the fight participants to include only those who are part of the player's or enemy's team and are still alive.
+   *
+   * @returns List of team members that are alive
+   */
+  public getLivingTeamFighters(): Character[] {
+    return this.fightParticipants.filter(participant => this.playerFighters.includes(participant) && participant.getIsAlive());
+  }
+
+  /**
+   * Gets the list of living enemy members that are still alive in the fight encounter.
+   * Filters the fight participants to include only those who are part of the enemy's team and are still alive.
+   *
+   * @returns List of enemy members that are alive
+   */
+  public getLivingEnemyFighters(): Character[] {
+    return this.fightParticipants.filter(participant => this.enemyFighters.includes(participant) && participant.getIsAlive());
+  }
+
+  /**
    * Starts the fight encounter by initializing the fight participants and determining the fight order.
    */
   public startFight() {
