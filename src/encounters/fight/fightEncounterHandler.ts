@@ -43,8 +43,10 @@ export class fightEncounterHandler {
   public getLivingAllies(currentCharacter: Character): Character[] {
     if (this.playerFighters.includes(currentCharacter)) {
       return this.playerFighters.filter(playerFighter => playerFighter.getIsAlive());
-    } else {
+    } else if (this.enemyFighters.includes(currentCharacter)) {
       return this.enemyFighters.filter(enemyFighter => enemyFighter.getIsAlive());
+    } else {
+      throw new Error("Character does not belong to any team in this encounter.");
     }
     }
 
@@ -58,8 +60,10 @@ export class fightEncounterHandler {
   public getLivingOpponents(currentCharacter: Character): Character[] {
     if (this.playerFighters.includes(currentCharacter)) {
       return this.enemyFighters.filter(enemyFighter => enemyFighter.getIsAlive());
-    } else {
+    } else if (this.enemyFighters.includes(currentCharacter)) {
       return this.playerFighters.filter(playerFighter => playerFighter.getIsAlive());
+    } else {
+      throw new Error("Character does not belong to any team in this encounter.");
     }
   }
 
