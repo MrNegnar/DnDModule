@@ -83,11 +83,14 @@ export class fightEncounterHandler {
   }
 
   /**
-   * Starts a new turn for each fight participant in the encounter until one side is defeated.
+   * Starts a new turn for each fight participant in the encounter until one side has no living participants.
    */
   private startTurn() {
-    do {
+    while (this.shouldFightContinue()) {
       for (let i = 0; i < this.fightParticipants.length; i++) {
+        if (!this.shouldFightContinue) {
+          break;
+        }
       const currentParticipant = this.fightParticipants[i];
       if (currentParticipant.getIsAlive() === false) {
         continue;
@@ -99,7 +102,7 @@ export class fightEncounterHandler {
         this.handleEnemyTurn(currentParticipant);
       }
     }
-    } while (this.playerFighters.some(player => player.getIsAlive()) && this.enemyFighters.some(enemy => enemy.getIsAlive()));
+    }
     console.log("The fight has ended.");
   }
 
@@ -125,5 +128,14 @@ export class fightEncounterHandler {
     if (target) {
       enemy.attack(target);
     }
+  }
+
+  /**
+   * Checks if the fight is still ongoing based on the alive status of player and enemy fighters.
+   *
+   * @returns boolean - True if both player and enemy fighters are still alive, indicating the fight is ongoing; otherwise, false.
+   */
+  private shouldFightContinue(): boolean {
+    return this.playerFighters.some(player => player.getIsAlive()) && this.enemyFighters.some(enemy => enemy.getIsAlive());
   }
 }
