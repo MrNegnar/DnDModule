@@ -12,6 +12,7 @@ export abstract class Character {
   private attackPower: number;
   private numberOfAttacks: number;
   private speed: number;
+  private armorClass: number;
 
   /**
    * Creates a new character with the specified name and hit points.
@@ -30,6 +31,7 @@ export abstract class Character {
     this.numberOfAttacks = 1;
     this.isAlive = true;
     this.speed = 1;
+    this.armorClass = 1;
   }
 
   /**
@@ -187,8 +189,15 @@ export abstract class Character {
    */
   public defend(damage: number): void {
     console.log(`Incoming damage: ${damage}`);
-    const damageToTake = new Defensive().calculateDamageTaken(damage);
+    const damageToTake = new Defensive().calculateDamageTaken(damage, this.armorClass);
     console.log(`Damage to take after defense: ${damageToTake}`);
     this.takeDamage(damageToTake);
+  }
+
+  /**
+   * Performs a guard action to raise the character's defense and lower the incoming damage.
+   */
+  public guard(): void {
+    this.armorClass += 1;
   }
 }
