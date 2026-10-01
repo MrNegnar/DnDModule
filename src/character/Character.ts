@@ -13,6 +13,7 @@ export abstract class Character {
   private numberOfAttacks: number;
   private speed: number;
   private armorClass: number;
+  private healAmount: number;
 
   /**
    * Creates a new character with the specified name and hit points.
@@ -32,6 +33,7 @@ export abstract class Character {
     this.isAlive = true;
     this.speed = 1;
     this.armorClass = 1;
+    this.healAmount = 5;
   }
 
   /**
@@ -149,14 +151,14 @@ export abstract class Character {
   }
 
   /**
-   * Heals the character by the specified amount.
+   * Heals a target character by the heal of current character's heal amount.
    *
-   * @param amount - The amount of hit points to restore to the character.
+   * @param targetToHeal - The character to be healed.
    */
-  private heal(amount: number): void {
-    this.currentHitPoints += amount;
-    if (this.currentHitPoints > this.maxHitPoints) {
-      this.currentHitPoints = this.maxHitPoints;
+  public heal(targetToHeal: Character): void {
+    targetToHeal.currentHitPoints += this.healAmount;
+    if (targetToHeal.currentHitPoints > targetToHeal.maxHitPoints) {
+      targetToHeal.currentHitPoints = targetToHeal.maxHitPoints;
     }
   }
 
