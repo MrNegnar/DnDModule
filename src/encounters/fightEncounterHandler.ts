@@ -49,7 +49,7 @@ export class fightEncounterHandler {
   }
 
   /**
-   * Starts the turn foethods for better readability and maintainability.
+   * Starts a new turn for each fight participant in the encounter until one side is defeated.
    */
   private startTurn() {
     do {
@@ -62,12 +62,7 @@ export class fightEncounterHandler {
       if (currentParticipant instanceof Player) {
         this.handlePlayerTurn(currentParticipant); 
       } else {
-        const target = this.playerFighters.find((member) => member.getIsAlive());
-        if (target) {
-          currentParticipant.attack(target);
-        } else {
-          break;
-        }
+        this.handleEnemyTurn(currentParticipant);
       }
     }
     } while (this.playerFighters.some(player => player.getIsAlive()) && this.enemyFighters.some(enemy => enemy.getIsAlive()));
@@ -84,5 +79,17 @@ export class fightEncounterHandler {
         if (target) {
           player.attack(target); 
         }
+  }
+
+  /**
+   * Handles the logic for an enemy's turn during the fight encounter.
+   *
+   * @param enemy the current enemy which action will be choosen.
+   */
+  private handleEnemyTurn(enemy: Enemy) {
+    const target = this.playerFighters.find((member) => member.getIsAlive());
+    if (target) {
+      enemy.attack(target);
+    }
   }
 }
