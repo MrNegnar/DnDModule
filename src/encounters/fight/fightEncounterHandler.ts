@@ -37,20 +37,30 @@ export class fightEncounterHandler {
    * Gets the list of living team members that are still alive in the fight encounter.
    * Filters the fight participants to include only those who are part of the player's or enemy's team and are still alive.
    *
+   * @param currentCharacter - The character whose allies are being retrieved. (used to determine the team they belong to)
    * @returns List of team members that are alive
    */
-  public getLivingTeamFighters(): Character[] {
-    return this.fightParticipants.filter(participant => this.playerFighters.includes(participant) && participant.getIsAlive());
-  }
+  public getLivingAllies(currentCharacter: Character): Character[] {
+    if (this.playerFighters.includes(currentCharacter)) {
+      return this.playerFighters.filter(playerFighter => playerFighter.getIsAlive());
+    } else {
+      return this.enemyFighters.filter(enemyFighter => enemyFighter.getIsAlive());
+    }
+    }
 
   /**
    * Gets the list of living enemy members that are still alive in the fight encounter.
    * Filters the fight participants to include only those who are part of the enemy's team and are still alive.
    *
+   * @param currentCharacter - The character whose opponents are being retrieved. (used to determine the team they belong to)
    * @returns List of enemy members that are alive
    */
-  public getLivingEnemyFighters(): Character[] {
-    return this.fightParticipants.filter(participant => this.enemyFighters.includes(participant) && participant.getIsAlive());
+  public getLivingOpponents(currentCharacter: Character): Character[] {
+    if (this.playerFighters.includes(currentCharacter)) {
+      return this.enemyFighters.filter(enemyFighter => enemyFighter.getIsAlive());
+    } else {
+      return this.playerFighters.filter(playerFighter => playerFighter.getIsAlive());
+    }
   }
 
   /**
