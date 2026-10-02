@@ -91,6 +91,15 @@ export abstract class Character {
   }
 
   /**
+   * Gets the armor class of the character.
+   *
+   * @returns the armor class of the given character.
+   */
+  public getArmorClass(): number {
+    return this.armorClass;
+  }
+
+  /**
    * Checks if the character is alive based on current hit points.
    *
    * @returns true if the character is alive, false otherwise.

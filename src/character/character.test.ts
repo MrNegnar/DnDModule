@@ -44,3 +44,12 @@ describe("Player taking damage", () => {
   });
 
 });
+
+it("Armorclass gets higher after guarding", () => {
+  const player = new Player("Krulle", 10, 1);
+  const initialArmorClass = player.getArmorClass();
+
+  player.guard();
+
+  expect(player.getArmorClass()).toBe(initialArmorClass + 1);
+});
