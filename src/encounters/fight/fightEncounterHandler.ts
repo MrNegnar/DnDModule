@@ -133,7 +133,7 @@ export class fightEncounterHandler {
         case "heal":
           player.heal(action.target);
           break;
-        case "skip turn":
+        case "skipTurn":
           break;
       } 
     }

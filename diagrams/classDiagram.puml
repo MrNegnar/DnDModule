@@ -52,7 +52,7 @@ enum PlayerFightAction {
   attack
   guard
   heal
-  skip turn
+  skipTurn
 }
 
 class fightEncounterHandler {

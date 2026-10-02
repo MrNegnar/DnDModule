@@ -29,7 +29,7 @@ describe("fightEncounterHandler", () => {
     const enemy = new Enemy("Goblin", 30, 1);
     const fight = new fightEncounterHandler([player], [enemy]);
 
-    fight.startFight(() => ({ type: "skip turn" })); 
+    fight.startFight(() => ({ type: "skipTurn" })); 
 
 
     expect(player.getIsAlive()).toBe(false);

@@ -47,10 +47,10 @@ const answer = readlineSync.question("> ");
     case "3":
       return { type: "heal", target: livingAllies[0] };
     case "4":
-      return { type: "skip turn" };
+      return { type: "skipTurn" };
     default:
       console.log("Ogiltigt val, du hoppar över din tur.");
-      return { type: "skip turn" };
+      return { type: "skipTurn" };
   }
 }
 /**

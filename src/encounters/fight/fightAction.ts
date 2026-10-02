@@ -5,7 +5,7 @@ export type PlayerFightAction =
 | { type: "attack"; target: Enemy; }
 | { type: "guard" }
 | { type: "heal"; target: Player; }
-| { type: "skip turn"; };
+| { type: "skipTurn"; };
 
 export type ChoosePlayerAction = (
   _player: Player,
