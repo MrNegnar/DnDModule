@@ -2,63 +2,80 @@
 Title Class Diagram for dnd module
 
 class Dice {
-  -dice: Array[int]
-  +roll(quantity: int, sides: int): array[int]
+  +rollDice(quantity: int, sides: int): int[]
   +howMManyDice(maximum: int): int
+  +checkIfAttackHit(): boolean
 }
 
-Interface Offensive {
-  +checkIfHit(): boolean
-  +calculateDamage(attackRoll: int, attackPower: int): int
-  +attack(): int
-}
-
-Interface Defensive {
-  +calculateDamageTaken(attackPower: int): int
-  +defend(): int
+class Defensive {
+  +calculateDamageTaken(damage: int, armorClass: int): int
 }
 
 abstract class Character {
   -name: string
   -maxHitPoints: int
   -currentHitPoints: int
+  -isAlive: boolean
+  -attacksPerTurn: int
+  -attackPower: int
+  -numberOfAttacks: int
+  -speed: int
+  -armorClass: int
+  -healAmount: int
   +getName(): string
   +getMaxHitPoints(): int
   +getCurrentHitPoints(): int
+  +getAttackPower(): int
+  +getAttacksPerTurn(): int
+  +getArmorClass(): int
+  +getSpeed(): int
+  +getIsAlive(): boolean
+  +attack(target: Character): void
+  +defend(damage: int): void
+  +guard(): void
+  +heal(targetToHeal: Character): void
   -setName(name: string): void
-  -setMaxHitPoints(maxHitPoints: int, currentHitPoints: int): void
-  -setCurrentHitPoints(currentHitPoints: int): void
-  +attack(target: Character, dice: Dice): int
-  +takeDamage(amount: int): void
+  -setInitialHitPoints(numberOfDice: int, sidesPerDie: int): void
+  -setMaxHitPoints(addingHitPoints: int): void
+  -takeDamage(damage: int): void
 }
 
 class Player extends Character {
-
+  +Player(name: string, attackPower: int, attacksPerTurn: int)
 }
 
 class Enemy extends Character {
-
+  +Enemy(name: string, attackPower: int, attacksPerTurn: int)
 }
 
-class FightEncounterHandler {
-  -players: Array[Player]
-  -enemies: Array[Enemy]
-  +startEncounter(): void
-  +addPlayer(player: Player): void
-  +addEnemy(enemy: Enemy): void
-  +removePlayer(player: Player): void
-  +removeEnemy(enemy: Enemy): void
-  +getPlayers(): Array[Player]
-  +getEnemies(): Array[Enemy]
-  +getAllParticipants(): Array[Character]
-  +decideTurnOrder(): Array[Character]
-  +getCurrentTurn(): Character
-  +endEncounter(): void
+enum PlayerFightAction {
+  attack
+  guard
+  heal
+  skip turn
+}
+
+class fightEncounterHandler {
+  +playerFighters: Player[]
+  +enemyFighters: Enemy[]
+  +fightParticipants: Character[]
+  -currentTurnIndex: int
+  +getFightMembers(): Character[]
+  +getLivingAllies(currentCharacter: Character): Character[]
+  +getLivingOpponents(currentCharacter: Character): Character[]
+  +startFight(choosePlayerAction: ChoosePlayerAction): void
+  -setFightOrder(): void
+  -startTurn(choosePlayerAction: ChoosePlayerAction): void
+  -handlePlayerTurn(player: Player, choosePlayerAction: ChoosePlayerAction): void
+  -handleEnemyTurn(enemy: Enemy): void
+  -shouldFightContinue(): boolean
 }
 
 Character --> Dice : rolls
-Character --> Offensive : uses
 Character --> Defensive : uses
-Character -->FightEncounterHandler : fights during
+Character ..> PlayerFightAction : resolves
+fightEncounterHandler "1" o-- "many" Player : playerFighters
+fightEncounterHandler "1" o-- "many" Enemy : enemyFighters
+fightEncounterHandler ..> PlayerFightAction : dispatches
 
 @enduml
