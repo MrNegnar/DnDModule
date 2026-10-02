@@ -32,7 +32,7 @@ export function parseArgs(argv: string[]): string | undefined {
  * @returns The action chosen by the player.
  */
 function askPlayerAction(player: Player, livingAllies: Player[], livingOpponents: Enemy[]): PlayerFightAction {
-  console.log(`${player.getName()}, välj en handling:`);
+  console.log(`${player.getName()}, Choose an action:`);
   console.log("1. Attack");
   console.log("2. Guard");
   console.log("3. Heal");
