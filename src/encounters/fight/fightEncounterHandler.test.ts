@@ -15,7 +15,7 @@ describe("fightEncounterHandler", () => {
     const enemy = new Enemy("Goblin", 6, 1);
     const fight = new fightEncounterHandler([player], [enemy]);
 
-    fight.startFight();
+    fight.startFight(() => ({ type: "attack", target: enemy })); 
 
 
     expect(player.getIsAlive()).toBe(true);
@@ -29,7 +29,7 @@ describe("fightEncounterHandler", () => {
     const enemy = new Enemy("Goblin", 30, 1);
     const fight = new fightEncounterHandler([player], [enemy]);
 
-    fight.startFight();
+    fight.startFight(() => ({ type: "skip turn" })); 
 
 
     expect(player.getIsAlive()).toBe(false);
@@ -44,7 +44,7 @@ describe("fightEncounterHandler", () => {
     vi.spyOn(enemy, "getSpeed").mockReturnValue(1);
 
     const fight = new fightEncounterHandler([player], [enemy]);
-    fight.startFight();
+    fight.startFight(() => ({ type: "attack", target: enemy })); 
 
     expect(fight.getFightMembers()[0]).toBe(player);
   });
@@ -57,7 +57,7 @@ describe("fightEncounterHandler", () => {
     vi.spyOn(enemy, "getSpeed").mockReturnValue(2);
 
     const fight = new fightEncounterHandler([player], [enemy]);
-    fight.startFight();
+    fight.startFight(() => ({ type: "attack", target: enemy })); 
 
     expect(fight.getFightMembers()[0]).toBe(enemy);
   });
