@@ -1,4 +1,3 @@
-import type { Character } from "../../character/Character.js";
 import type { Player } from "../../character/Player.js";
 import type { Enemy } from "../../character/Enemy.js";
 
@@ -9,7 +8,7 @@ export type PlayerFightAction =
 | { type: "skip turn"; };
 
 export type ChoosePlayerAction = (
-  player: Player,
-  livingAllies: Player[],
-  livingOpponents: Enemy[]
+  _player: Player,
+  _livingAllies: Player[],
+  _livingOpponents: Enemy[]
 ) => PlayerFightAction;

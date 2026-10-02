@@ -1,6 +1,7 @@
 import { Player } from "../../character/Player.js";
 import { Enemy } from "../../character/Enemy.js";
 import { Character } from "../../character/Character.js";
+import type { ChoosePlayerAction } from "./fightAction.js";
 
 /**
  * Handles the logic for managing fight encounters in the game.
@@ -69,10 +70,12 @@ export class fightEncounterHandler {
 
   /**
    * Starts the fight encounter by initializing the fight participants and determining the fight order.
+   *
+   * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
-  public startFight() {
+  public startFight(choosePlayerAction: ChoosePlayerAction) {
     this.setFightOrder();
-    this.startTurn();
+    this.startTurn(choosePlayerAction);
   }
 
   /**
@@ -84,8 +87,10 @@ export class fightEncounterHandler {
 
   /**
    * Starts a new turn for each fight participant in the encounter until one side has no living participants.
+   * 
+   * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
-  private startTurn() {
+  private startTurn(choosePlayerAction: ChoosePlayerAction) {
     while (this.shouldFightContinue()) {
       for (let i = 0; i < this.fightParticipants.length; i++) {
         if (!this.shouldFightContinue()) {
@@ -97,7 +102,7 @@ export class fightEncounterHandler {
         }
         console.log(`It's ${currentParticipant.getName()}'s turn.`);
         if (currentParticipant instanceof Player) {
-          this.handlePlayerTurn(currentParticipant); 
+          this.handlePlayerTurn(currentParticipant, choosePlayerAction); 
         } else {
           this.handleEnemyTurn(currentParticipant);
         }
@@ -110,12 +115,28 @@ export class fightEncounterHandler {
    * Handles the logic for a player's turn during the fight encounter.
    *
    * @param player - The player character whose turn is being handled.
+   * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
-  private handlePlayerTurn(player: Player) {
-        const target = this.enemyFighters.find((member) => member.getIsAlive());
-        if (target) {
-          player.attack(target); 
-        }
+  private handlePlayerTurn(player: Player, choosePlayerAction: ChoosePlayerAction) {
+    const livingAllies = this.playerFighters.filter((member) => member.getIsAlive());
+    const livingOpponents = this.enemyFighters.filter((member) => member.getIsAlive());
+    const action = choosePlayerAction(player, livingAllies, livingOpponents);
+    const target = this.enemyFighters.find((member) => member.getIsAlive());
+    if (target) {
+      switch (action.type) {
+        case "attack":
+          player.attack(action.target);
+          break;
+        case "guard":
+          player.guard();
+          break;
+        case "heal":
+          player.heal(action.target);
+          break;
+        case "skip turn":
+          break;
+      } 
+    }
   }
 
   /**

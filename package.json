@@ -34,6 +34,7 @@
     "@lnu/eslint-config": "^2.0.13",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^26.5.1",
+    "@types/readline-sync": "^1.4.8",
     "@typescript-eslint/eslint-plugin": "^8.70.0",
     "@typescript-eslint/parser": "^8.70.0",
     "eslint": "^10.10.0",
@@ -48,5 +49,8 @@
     "tsx": "^4.23.13",
     "typescript": "^6.0.3",
     "vitest": "^5.0.0"
+  },
+  "dependencies": {
+    "readline-sync": "^1.4.10"
   }
 }

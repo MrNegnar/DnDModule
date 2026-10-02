@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 
+import readlineSync from "readline-sync";
 import { Player } from "./character/Player.js";
 import { Enemy } from "./character/Enemy.js";
 import { fightEncounterHandler } from "./encounters/fight/fightEncounterHandler.js";
+import type { PlayerFightAction } from "./encounters/fight/fightAction.js";
+
+
+
 
 /**
  * Extracts the name argument from the command line.
@@ -19,6 +24,36 @@ export function parseArgs(argv: string[]): string | undefined {
 }
 
 /**
+ * Asks the player to choose an action during their turn in the fight encounter.
+ *
+ * @param player - The player character whose action is being chosen.
+ * @param livingAllies - The list of living allies of the player.
+ * @param livingOpponents - The list of living opponents of the player.
+ * @returns The action chosen by the player.
+ */
+function askPlayerAction(player: Player, livingAllies: Player[], livingOpponents: Enemy[]): PlayerFightAction {
+  console.log(`${player.getName()}, välj en handling:`);
+  console.log("1. Attack");
+  console.log("2. Guard");
+  console.log("3. Heal");
+  console.log("4. Skip turn");
+const answer = readlineSync.question("> ");
+
+  switch (answer) {
+    case "1":
+      return { type: "attack", target: livingOpponents[0] };
+    case "2":
+      return { type: "guard" };
+    case "3":
+      return { type: "heal", target: livingAllies[0] };
+    case "4":
+      return { type: "skip turn" };
+    default:
+      console.log("Ogiltigt val, du hoppar över din tur.");
+      return { type: "skip turn" };
+  }
+}
+/**
  * Execution entry point.
  */
 function main(): void {
@@ -33,7 +68,7 @@ function main(): void {
     const playerFighters = [player1];
     const enemyFighters = [enemy1, enemy2]; 
     const fight = new fightEncounterHandler(playerFighters, enemyFighters)
-    fight.startFight();
+    fight.startFight(askPlayerAction);
     console.log(fight.getFightMembers());
     for (const member of fight.getFightMembers()) {
       console.log(`${member.getName()} HP: ${member.getCurrentHitPoints()}`);
