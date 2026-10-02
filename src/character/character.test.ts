@@ -23,6 +23,7 @@ it("starts with current HP equal to maximum HP", () => {
 });
 
 describe("Player taking damage", () => {
+  
   it("reduces current HP when taking damage", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
     const player = new Player("Krulle", 10, 1);
@@ -52,4 +53,24 @@ it("Armorclass gets higher after guarding", () => {
   player.guard();
 
   expect(player.getArmorClass()).toBe(initialArmorClass + 1);
+});
+
+describe("Player healing", () => {
+
+  it("Player heals itself when healing 'action' is used", () => {
+    const player = new Player("Krulle", 10, 1);
+
+    player.defend(7);
+    player.heal(player);
+
+    expect(player.getCurrentHitPoints()).toBe(player.getMaxHitPoints()-1);
+  });
+
+  it("Player cannot heal beyond maximum HP", () => {
+    const player = new Player("Krulle", 10, 1);
+
+    player.heal(player);
+
+    expect(player.getCurrentHitPoints()).toBe(player.getMaxHitPoints());
+  });
 });
