@@ -27,7 +27,7 @@ describe("Player taking damage", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
     const player = new Player("Krulle", 10, 1);
     
-    player.defend(5);
+    player.defend(4);
 
     expect(player.getCurrentHitPoints()).toBe(1);
     expect(player.getIsAlive()).toBe(true);
@@ -37,7 +37,7 @@ describe("Player taking damage", () => {
     vi.spyOn(Math, "random").mockReturnValue(0);
     const player = new Player("Krulle", 10, 1);
 
-    player.defend(6);
+    player.defend(5);
 
     expect(player.getCurrentHitPoints()).toBe(0);
     expect(player.getIsAlive()).toBe(false);
