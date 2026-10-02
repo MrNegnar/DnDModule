@@ -88,20 +88,20 @@ export class fightEncounterHandler {
   private startTurn() {
     while (this.shouldFightContinue()) {
       for (let i = 0; i < this.fightParticipants.length; i++) {
-        if (!this.shouldFightContinue) {
+        if (!this.shouldFightContinue()) {
           break;
         }
-      const currentParticipant = this.fightParticipants[i];
-      if (currentParticipant.getIsAlive() === false) {
-        continue;
+        const currentParticipant = this.fightParticipants[i];
+        if (currentParticipant.getIsAlive() === false) {
+          continue;
+        }
+        console.log(`It's ${currentParticipant.getName()}'s turn.`);
+        if (currentParticipant instanceof Player) {
+          this.handlePlayerTurn(currentParticipant); 
+        } else {
+          this.handleEnemyTurn(currentParticipant);
+        }
       }
-      console.log(`It's ${currentParticipant.getName()}'s turn.`);
-      if (currentParticipant instanceof Player) {
-        this.handlePlayerTurn(currentParticipant); 
-      } else {
-        this.handleEnemyTurn(currentParticipant);
-      }
-    }
     }
     console.log("The fight has ended.");
   }
