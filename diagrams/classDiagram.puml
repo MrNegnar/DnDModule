@@ -1,10 +1,14 @@
-@startuml classDiagram
-Title Class Diagram for dnd module
+﻿@startuml classDiagram
+Title Class Diagram fight module
 
 class Dice {
   +rollDice(quantity: int, sides: int): int[]
   +howManyDice(maximum: int): int
-  +checkIfAttackHit(): boolean
+}
+
+class Offensive {
+  +checkIfHit(): boolean
+  +calculateDamage(damage: int[]): int
 }
 
 class Defensive {
@@ -15,12 +19,12 @@ abstract class Character {
   -name: string
   -maxHitPoints: int
   -currentHitPoints: int
-  -isAlive: boolean
   -attackPower: int
   -numberOfAttacks: int
   -speed: int
   -armorClass: int
   -healAmount: int
+  +Character(name: string, attackPower: int, startHpNumberOfDice: int, startHpSidesPerDie: int)
   +getName(): string
   +getMaxHitPoints(): int
   +getCurrentHitPoints(): int
@@ -38,26 +42,30 @@ abstract class Character {
   -takeDamage(damage: int): void
 }
 
-class Player extends Character {
+class Player {
   +Player(name: string, attackPower: int)
 }
 
-class Enemy extends Character {
+class Enemy {
   +Enemy(name: string, attackPower: int)
 }
 
-enum PlayerFightActions {
-  attack
-  guard
-  heal
-  skipTurn
+class PlayerFightActions <<union type>> {
+  = "attack" (target: Enemy)
+  = "guard"
+  = "heal" (target: Player)
+  = "skipTurn"
+}
+
+class ChoosePlayerAction <<function type>> {
+  +(_player: Player, _livingAllies: Player[], _livingOpponents: Enemy[]): PlayerFightActions
 }
 
 class fightEncounterHandler {
-  +playerFighters: Player[]
-  +enemyFighters: Enemy[]
-  +fightParticipants: Character[]
-  -currentTurnIndex: int
+  -playerFighters: Player[]
+  -enemyFighters: Enemy[]
+  -fightParticipants: Character[]
+  +fightEncounterHandler(playerFighters: Player[], enemyFighters: Enemy[])
   +getFightMembers(): Character[]
   +getLivingAllies(currentCharacter: Character): Character[]
   +getLivingOpponents(currentCharacter: Character): Character[]
@@ -65,15 +73,26 @@ class fightEncounterHandler {
   -setFightOrder(): void
   -startTurn(choosePlayerAction: ChoosePlayerAction): void
   -handlePlayerTurn(player: Player, choosePlayerAction: ChoosePlayerAction): void
+  -executePlayerAction(player: Player, action: PlayerFightActions): void
   -handleEnemyTurn(enemy: Enemy): void
   -shouldFightContinue(): boolean
 }
 
-Character --> Dice : rolls
-Character --> Defensive : uses
-Character ..> PlayerFightActions : resolves
-fightEncounterHandler "1" o-- "many" Player : playerFighters
-fightEncounterHandler "1" o-- "many" Enemy : enemyFighters
-fightEncounterHandler ..> PlayerFightActions : dispatches
+Player --|> Character
+Enemy --|> Character
+Character ..> Dice : rolls for behavior actions
+Character ..> Offensive : calculates offensive behavior
+Character ..> Defensive : calculates defensive behavior
+fightEncounterHandler "1" o-- "..*" Player : playerFighters
+fightEncounterHandler "1" o-- "..*" Enemy : enemyFighters
+fightEncounterHandler ..> Character : sets order of participants
+fightEncounterHandler ..> ChoosePlayerAction : requests player action
+ChoosePlayerAction ..> PlayerFightActions : handles player action input
+PlayerFightActions ..> Player : Performs defensive actions
+PlayerFightActions ..> Enemy : performs offensive actions
 
 @enduml
+
+
+
+
