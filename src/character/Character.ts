@@ -125,15 +125,6 @@ export abstract class Character {
   }
 
   /**
-   * adds hit points to the character's maximum hit points.
-   *
-   * @param addingHitPoints - The amount of hit points to add to the character's maximum hit points.
-   */
-  private setMaxHitPoints(addingHitPoints: number): void {
-    this.maxHitPoints += addingHitPoints;
-  }
-
-  /**
    * lowers the current hit points of the character by the specified damage amount.
    *
    * @param damage - The amount of damage to apply to the character.

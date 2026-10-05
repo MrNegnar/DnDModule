@@ -6,7 +6,7 @@ import type { ChoosePlayerAction, PlayerFightActions } from "./fightAction.js";
 /**
  * Handles the logic for managing fight encounters in the game.
  */
-export class fightEncounterHandler {
+export class FightEncounterHandler {
   
   private playerFighters: Player[] = [];
   private enemyFighters: Enemy[] = [];

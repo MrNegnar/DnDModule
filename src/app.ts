@@ -3,7 +3,7 @@
 import readlineSync from "readline-sync";
 import { Player } from "./character/Player.js";
 import { Enemy } from "./character/Enemy.js";
-import { fightEncounterHandler } from "./encounters/fight/fightEncounterHandler.js";
+import { FightEncounterHandler } from "./encounters/fight/FightEncounterHandler.js";
 import type { PlayerFightActions } from "./encounters/fight/fightAction.js";
 
 
@@ -67,7 +67,7 @@ function main(): void {
     console.log("Starting fight...");
     const playerFighters = [player1];
     const enemyFighters = [enemy1, enemy2]; 
-    const fight = new fightEncounterHandler(playerFighters, enemyFighters)
+    const fight = new FightEncounterHandler(playerFighters, enemyFighters)
     fight.setupFight();
     fight.startFight(askPlayerAction);
     console.log(fight.getFightMembers());

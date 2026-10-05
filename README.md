@@ -7,7 +7,7 @@ A small TypeScript module for running turn-based D&D-style fight encounters: cha
 - **Characters**: `Player` and `Enemy` extend a shared `Character` base class with hit points, attack power, speed, armor class and healing.
 - **Dice rolling**: a small `Dice` utility rolls arbitrary dice pools (e.g. `4d6` for starting HP) and resolves attack rolls.
 - **Defense**: a separate `Defensive` behavior reduces incoming damage based on a character's armor class.
-- **Fight encounters**: `fightEncounterHandler` manages turn order (by speed), living allies/opponents per side, and runs a fight until one team has no living members left.
+- **Fight encounters**: `FightEncounterHandler` manages turn order (by speed), living allies/opponents per side, and runs a fight until one team has no living members left.
 - **Player actions**: a `PlayerFightActions` type (`attack`, `guard`, `heal`, `skipTurn`) lets any caller — a terminal prompt, a test, or a future UI — decide what a player does on their turn, without the fight logic needing to know how that choice was made.
 
 ## 🛠️ Getting Started
@@ -59,14 +59,14 @@ Enemies act automatically. The fight continues until either all players or all e
 ```typescript
 import { Player } from "./character/Player.js";
 import { Enemy } from "./character/Enemy.js";
-import { fightEncounterHandler } from "./encounters/fight/fightEncounterHandler.js";
+import { FightEncounterHandler } from "./encounters/fight/FightEncounterHandler.js";
 import type { ChoosePlayerAction } from "./encounters/fight/fightAction.js";
 
-const player = new Player("Krulle", 10, 2);
-const goblin = new Enemy("Goblin", 8, 1);
-const orc = new Enemy("Orc", 12, 2);
+const player = new Player("Krulle", 10);
+const goblin = new Enemy("Goblin", 8);
+const orc = new Enemy("Orc", 12);
 
-const fight = new fightEncounterHandler([player], [goblin, orc]);
+const fight = new FightEncounterHandler([player], [goblin, orc]);
 
 // Always have the player attack the first living opponent.
 const alwaysAttack: ChoosePlayerAction = (_player, _livingAllies, livingOpponents) => ({
@@ -74,6 +74,7 @@ const alwaysAttack: ChoosePlayerAction = (_player, _livingAllies, livingOpponent
   target: livingOpponents[0],
 });
 
+fight.setupFight();
 fight.startFight(alwaysAttack);
 
 console.log(`${player.getName()} is alive: ${player.getIsAlive()}`);
@@ -101,7 +102,7 @@ npm run typecheck
 
 ### Running Tests
 
-Tests live next to the code they test (e.g. `src/character/character.test.ts`, `src/encounters/fight/fightEncounterHandler.test.ts`), using [Vitest](https://vitest.dev).
+Tests live next to the code they test (e.g. `src/character/character.test.ts`, `src/encounters/fight/FightEncounterHandler.test.ts`), using [Vitest](https://vitest.dev).
 
 - **Interactive watch mode (recommended during development):**
   ```bash
@@ -176,8 +177,8 @@ npm run build
 │   └── encounters/
 │       └── fight/
 │           ├── fightAction.ts             # PlayerFightActions type + ChoosePlayerAction callback type
-│           ├── fightEncounterHandler.ts   # Turn order, targeting, and the fight loop
-│           └── fightEncounterHandler.test.ts
+│           ├── FightEncounterHandler.ts   # Turn order, targeting, and the fight loop
+│           └── FightEncounterHandler.test.ts
 ├── diagrams/                          # PlantUML class/sequence/system diagrams
 ├── test/                              # Integration/system-level tests (higher-level flows)
 ├── dist/                              # Compiled JavaScript output (git-ignored)

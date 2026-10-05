@@ -1,20 +1,20 @@
 ﻿import { afterEach, describe, expect, it, vi } from "vitest";
 import { Player } from "../../character/Player.js";
 import { Enemy } from "../../character/Enemy.js";
-import { fightEncounterHandler } from "./fightEncounterHandler.js";
+import { FightEncounterHandler } from "./FightEncounterHandler.js";
 
 afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("fightEncounterHandler", () => {
+describe("FightEncounterHandler", () => {
   describe("check for living participants before the fight starts", () => {
     it("Fight encounter starts with all participants alive", () => {
         const player = new Player("Krulle", 10);
         const player2 = new Player("Ally", 10);
         const enemy = new Enemy("Goblin", 6);
         const enemy2 = new Enemy("Orc", 8);
-        const fight = new fightEncounterHandler([player, player2], [enemy, enemy2]);
+        const fight = new FightEncounterHandler([player, player2], [enemy, enemy2]);
 
         expect(fight.getFightMembers()).toEqual([player, player2, enemy, enemy2])
 
@@ -27,7 +27,7 @@ describe("fightEncounterHandler", () => {
         const player2 = new Player("Ally", 10);
         const enemy = new Enemy("Goblin", 6);
         const enemy2 = new Enemy("Orc", 8);
-        const fight = new fightEncounterHandler([player, player2], [enemy, enemy2]);
+        const fight = new FightEncounterHandler([player, player2], [enemy, enemy2]);
 
         expect(fight.getLivingAllies(player)).toEqual([player, player2])
 
@@ -39,7 +39,7 @@ describe("fightEncounterHandler", () => {
         const player2 = new Player("Ally", 10);
         const enemy = new Enemy("Goblin", 6);
         const enemy2 = new Enemy("Orc", 8);
-        const fight = new fightEncounterHandler([player, player2], [enemy, enemy2]);
+        const fight = new FightEncounterHandler([player, player2], [enemy, enemy2]);
 
         expect(fight.getLivingOpponents(player)).toEqual([enemy, enemy2])
 
@@ -53,7 +53,7 @@ describe("fightEncounterHandler", () => {
 
     const player = new Player("Krulle", 30);
     const enemy = new Enemy("Goblin", 6);
-    const fight = new fightEncounterHandler([player], [enemy]);
+    const fight = new FightEncounterHandler([player], [enemy]);
 
     fight.startFight(() => ({ type: "attack", target: enemy })); 
 
@@ -67,7 +67,7 @@ describe("fightEncounterHandler", () => {
 
     const player = new Player("Krulle", 3);
     const enemy = new Enemy("Goblin", 30);
-    const fight = new fightEncounterHandler([player], [enemy]);
+    const fight = new FightEncounterHandler([player], [enemy]);
 
     fight.startFight(() => ({ type: "skipTurn" })); 
 
@@ -83,7 +83,7 @@ describe("fightEncounterHandler", () => {
     vi.spyOn(player, "getSpeed").mockReturnValue(2);
     vi.spyOn(enemy, "getSpeed").mockReturnValue(1);
 
-    const fight = new fightEncounterHandler([player], [enemy]);
+    const fight = new FightEncounterHandler([player], [enemy]);
     fight.setupFight();
 
     expect(fight.getFightMembers()[0]).toBe(player);
@@ -96,7 +96,7 @@ describe("fightEncounterHandler", () => {
     vi.spyOn(player, "getSpeed").mockReturnValue(1);
     vi.spyOn(enemy, "getSpeed").mockReturnValue(2);
 
-    const fight = new fightEncounterHandler([player], [enemy]);
+    const fight = new FightEncounterHandler([player], [enemy]);
     fight.setupFight();
 
     expect(fight.getFightMembers()[0]).toBe(enemy);
