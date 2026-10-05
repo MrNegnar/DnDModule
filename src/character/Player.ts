@@ -1,4 +1,4 @@
-import { Character } from "./Character.js";
+import { Character } from './Character.js'
 /**
  * Represents a player character in the game, extending the base Character class.
  */
@@ -10,6 +10,6 @@ export class Player extends Character {
    * @param attackPower - The attack power of the player character.
    */
   constructor(name: string, attackPower: number) {
-    super(name, attackPower, 4, 6);
+    super(name, attackPower, 4, 6)
   }
 }

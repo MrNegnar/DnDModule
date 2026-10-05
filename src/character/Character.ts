@@ -1,18 +1,18 @@
-import { Defensive } from "./behaviorCalculators/defensive.js";
-import { Offensive } from "./behaviorCalculators/offensive.js";
-import { Dice } from "../dice/Dice.js";
+import { Defensive } from './behaviorCalculators/defensive.js'
+import { Offensive } from './behaviorCalculators/offensive.js'
+import { Dice } from '../dice/Dice.js'
 /**
  * Represents a character in the game with basic attributes like name and hit points.
  */
 export abstract class Character {
-  private name!: string;
-  private maxHitPoints!: number;
-  private currentHitPoints!: number;
-  private attackPower: number;
-  private numberOfAttacks: number;
-  private speed: number;
-  private armorClass: number;
-  private healAmount: number;
+  private name!: string
+  private maxHitPoints!: number
+  private currentHitPoints!: number
+  private attackPower: number
+  private numberOfAttacks: number
+  private speed: number
+  private armorClass: number
+  private healAmount: number
 
   /**
    * Creates a new character with the specified name and hit points.
@@ -23,13 +23,13 @@ export abstract class Character {
    * @param startHpSidesPerDie - The number of sides on each die for determining initial hit points.
    */
   constructor(name: string, attackPower: number, startHpNumberOfDice: number, startHpSidesPerDie: number) {
-    this.setName(name);
-    this.setInitialHitPoints(startHpNumberOfDice, startHpSidesPerDie);
-    this.attackPower = attackPower;
-    this.numberOfAttacks = 1;
-    this.speed = 1;
-    this.armorClass = 1;
-    this.healAmount = 5;
+    this.setName(name)
+    this.setInitialHitPoints(startHpNumberOfDice, startHpSidesPerDie)
+    this.attackPower = attackPower
+    this.numberOfAttacks = 1
+    this.speed = 1
+    this.armorClass = 1
+    this.healAmount = 5
   }
 
   /**
@@ -38,7 +38,7 @@ export abstract class Character {
    * @returns the speed of the given character.
    */
   public getSpeed(): number {
-    return this.speed;
+    return this.speed
   }
 
   /**
@@ -47,7 +47,7 @@ export abstract class Character {
    * @returns the name of the given character
    */
   public getName(): string {
-    return this.name;
+    return this.name
   }
 
   /**
@@ -56,7 +56,7 @@ export abstract class Character {
    * @returns the maximum hit points of the given character
    */
   public getMaxHitPoints(): number {
-    return this.maxHitPoints;
+    return this.maxHitPoints
   }
 
   /**
@@ -65,7 +65,7 @@ export abstract class Character {
    * @returns the current hit points of the given character
    */
   public getCurrentHitPoints(): number {
-    return this.currentHitPoints;
+    return this.currentHitPoints
   }
 
   /**
@@ -74,7 +74,7 @@ export abstract class Character {
    * @returns the attack power of the given character.
    */
   public getAttackPower(): number {
-    return this.attackPower;
+    return this.attackPower
   }
 
   /**
@@ -83,7 +83,7 @@ export abstract class Character {
    * @returns the armor class of the given character.
    */
   public getArmorClass(): number {
-    return this.armorClass;
+    return this.armorClass
   }
 
   /**
@@ -92,7 +92,7 @@ export abstract class Character {
    * @returns true if the characters health is above 0, false otherwise.
    */
   public getIsAlive(): boolean {
-    return this.currentHitPoints > 0;
+    return this.currentHitPoints > 0
   }
 
   /**
@@ -101,10 +101,10 @@ export abstract class Character {
    * @param name - The new name of the character.
    */
   private setName(name: string): void {
-    if (!name || name.trim() === "") {
-      this.name = "Unknown";
+    if (!name || name.trim() === '') {
+      this.name = 'Unknown'
     } else {
-      this.name = name;
+      this.name = name
     }
   }
 
@@ -115,13 +115,13 @@ export abstract class Character {
    * @param sidesPerDie - The number of sides on each die.
    */
   private setInitialHitPoints(numberOfDice: number, sidesPerDie: number): void {
-    const startingHitPoints: number[] =  new Dice().rollDice(numberOfDice, sidesPerDie); // Example: roll 4 six-sided dice to determine starting hit points
-    let totalStartingHitPoints = 0;
+    const startingHitPoints: number[] = new Dice().rollDice(numberOfDice, sidesPerDie) // Example: roll 4 six-sided dice to determine starting hit points
+    let totalStartingHitPoints = 0
     for (const healthPoints of startingHitPoints) {
-      totalStartingHitPoints += healthPoints;
+      totalStartingHitPoints += healthPoints
     }
-    this.maxHitPoints = totalStartingHitPoints;
-    this.currentHitPoints = this.maxHitPoints;
+    this.maxHitPoints = totalStartingHitPoints
+    this.currentHitPoints = this.maxHitPoints
   }
 
   /**
@@ -130,9 +130,9 @@ export abstract class Character {
    * @param damage - The amount of damage to apply to the character.
    */
   private takeDamage(damage: number): void {
-    this.currentHitPoints -= damage;
+    this.currentHitPoints -= damage
     if (this.currentHitPoints < 0) {
-      this.currentHitPoints = 0;
+      this.currentHitPoints = 0
     }
   }
 
@@ -143,9 +143,9 @@ export abstract class Character {
    */
   public heal(targetToHeal: Character): void {
     if (targetToHeal.getIsAlive()) {
-      targetToHeal.currentHitPoints += this.healAmount;
+      targetToHeal.currentHitPoints += this.healAmount
       if (targetToHeal.currentHitPoints > targetToHeal.maxHitPoints) {
-        targetToHeal.currentHitPoints = targetToHeal.maxHitPoints;
+        targetToHeal.currentHitPoints = targetToHeal.maxHitPoints
       }
     }
   }
@@ -157,14 +157,14 @@ export abstract class Character {
    * @param target - the target to be attacked.
    */
   public attack(target: Character): void {
-    let dieResult: number[];
-    const attackHit = new Offensive().checkIfHit();
+    let dieResult: number[]
+    const attackHit = new Offensive().checkIfHit()
     if (attackHit) {
-      dieResult = new Dice().rollDice(this.numberOfAttacks, this.attackPower);
-      const totalDamage = new Offensive().calculateDamage(dieResult);
-      target.defend(totalDamage);
+      dieResult = new Dice().rollDice(this.numberOfAttacks, this.attackPower)
+      const totalDamage = new Offensive().calculateDamage(dieResult)
+      target.defend(totalDamage)
     } else {
-      console.log(`${this.getName()}'s attack missed.`);
+      console.log(`${this.getName()}'s attack missed.`)
     }
   }
 
@@ -175,16 +175,16 @@ export abstract class Character {
    * @param damage - the incoming damage to be processed by the character's defense.
    */
   public defend(damage: number): void {
-    console.log(`Incoming damage: ${damage}`);
-    const damageToTake = new Defensive().calculateDamageTaken(damage, this.armorClass);
-    console.log(`Damage to take after defense: ${damageToTake}`);
-    this.takeDamage(damageToTake);
+    console.log(`Incoming damage: ${damage}`)
+    const damageToTake = new Defensive().calculateDamageTaken(damage, this.armorClass)
+    console.log(`Damage to take after defense: ${damageToTake}`)
+    this.takeDamage(damageToTake)
   }
 
   /**
    * Performs a guard action to raise the character's defense and lower the incoming damage.
    */
   public guard(): void {
-    this.armorClass += 1;
+    this.armorClass += 1
   }
 }

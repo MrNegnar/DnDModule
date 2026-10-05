@@ -1,18 +1,17 @@
-import { Dice } from "../../dice/Dice.js";
+import { Dice } from '../../dice/Dice.js'
 
 /**
  * Represents the offensive behavior of a character, including attack and damage calculation.
  */
 export class Offensive {
-
   /**
    * Checks if the attack hits based on a random chance.
    *
    * @returns true if the attack hits, false otherwise.
    */
   public checkIfHit() {
-    const dice = new Dice();
-    return dice.rollDice(1, 20)[0] > 10; // Example: hit if roll is greater than 10
+    const dice = new Dice()
+    return dice.rollDice(1, 20)[0] > 10 // Example: hit if roll is greater than 10
   }
 
   /**
@@ -22,10 +21,10 @@ export class Offensive {
    * @returns The total damage calculated from the array.
    */
   public calculateDamage(damage: Array<number>): number {
-    let totalDamage = 0;
+    let totalDamage = 0
     for (const dmg of damage) {
-      totalDamage += dmg;
+      totalDamage += dmg
     }
-    return totalDamage;
+    return totalDamage
   }
 }

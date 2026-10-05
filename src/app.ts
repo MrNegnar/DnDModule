@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 
-import readlineSync from "readline-sync";
-import { Player } from "./character/Player.js";
-import { Enemy } from "./character/Enemy.js";
-import { FightEncounterHandler } from "./encounters/fight/FightEncounterHandler.js";
-import type { PlayerFightActions } from "./encounters/fight/fightAction.js";
-
-
-
+import readlineSync from 'readline-sync'
+import { Player } from './character/Player.js'
+import { Enemy } from './character/Enemy.js'
+import { FightEncounterHandler } from './encounters/fight/FightEncounterHandler.js'
+import type { PlayerFightActions } from './encounters/fight/fightAction.js'
 
 /**
  * Extracts the name argument from the command line.
@@ -32,47 +29,46 @@ export function parseArgs(argv: string[]): string | undefined {
  * @returns The action chosen by the player.
  */
 function askPlayerAction(player: Player, livingAllies: Player[], livingOpponents: Enemy[]): PlayerFightActions {
-  console.log(`${player.getName()}, Choose an action:`);
-  console.log("1. Attack");
-  console.log("2. Guard");
-  console.log("3. Heal");
-  console.log("4. Skip turn");
-const answer = readlineSync.question("> ");
+  console.log(`${player.getName()}, Choose an action:`)
+  console.log('1. Attack')
+  console.log('2. Guard')
+  console.log('3. Heal')
+  console.log('4. Skip turn')
+  const answer = readlineSync.question('> ')
 
   switch (answer) {
-    case "1":
-      return { type: "attack", target: livingOpponents[0] };
-    case "2":
-      return { type: "guard" };
-    case "3":
-      return { type: "heal", target: livingAllies[0] };
-    case "4":
-      return { type: "skipTurn" };
+    case '1':
+      return { type: 'attack', target: livingOpponents[0] }
+    case '2':
+      return { type: 'guard' }
+    case '3':
+      return { type: 'heal', target: livingAllies[0] }
+    case '4':
+      return { type: 'skipTurn' }
     default:
-      console.log("Ogiltigt val, du hoppar över din tur.");
-      return { type: "skipTurn" };
+      console.log('Ogiltigt val, du hoppar över din tur.')
+      return { type: 'skipTurn' }
   }
 }
 /**
  * Execution entry point.
  */
 function main(): void {
-
   try {
-    const player1 = new Player("Krulle", 10)
-    console.log(player1);
-    const enemy1 = new Enemy("Goblin", 8)
-    const enemy2 = new Enemy("Orc", 12)
-    console.log(enemy1);
-    console.log("Starting fight...");
-    const playerFighters = [player1];
-    const enemyFighters = [enemy1, enemy2]; 
+    const player1 = new Player('Krulle', 10)
+    console.log(player1)
+    const enemy1 = new Enemy('Goblin', 8)
+    const enemy2 = new Enemy('Orc', 12)
+    console.log(enemy1)
+    console.log('Starting fight...')
+    const playerFighters = [player1]
+    const enemyFighters = [enemy1, enemy2]
     const fight = new FightEncounterHandler(playerFighters, enemyFighters)
-    fight.setupFight();
-    fight.startFight(askPlayerAction);
-    console.log(fight.getFightMembers());
+    fight.setupFight()
+    fight.startFight(askPlayerAction)
+    console.log(fight.getFightMembers())
     for (const member of fight.getFightMembers()) {
-      console.log(`${member.getName()} HP: ${member.getCurrentHitPoints()}`);
+      console.log(`${member.getName()} HP: ${member.getCurrentHitPoints()}`)
     }
   } catch (error) {
     console.error('An unexpected error occurred during execution:', (error as Error).message)

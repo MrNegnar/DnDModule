@@ -11,7 +11,7 @@ export class Defensive {
    */
   calculateDamageTaken(damage: number, armorClass: number): number {
     // Example implementation: reduce damage by a fixed amount (e.g., armor)
-    const damageTaken = Math.max(0, damage - armorClass); // Assuming 2 is the armor value
-    return damageTaken;
+    const damageTaken = Math.max(0, damage - armorClass) // Assuming 2 is the armor value
+    return damageTaken
   }
 }
