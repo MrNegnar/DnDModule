@@ -115,7 +115,6 @@ Tests live next to the code they test (e.g. `src/character/character.test.ts`, `
 - **Run a specific test file or name pattern:**
   ```bash
   npm run test:run -- src/character/character.test.ts
-  npm run test:match -- <test-name-pattern>
   ```
 
 Randomness (dice rolls) is made deterministic in tests via `vi.spyOn(Math, "random")`, so outcomes like exact HP values or hit/miss results can be asserted reliably.
