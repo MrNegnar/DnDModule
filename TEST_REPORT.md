@@ -1,32 +1,37 @@
-# Test Report
-
-<!--
-    Commit this file to the root of your GitHub repository, alongside your module's code.
--->
+﻿# Test Report
 
 ## Summary
 
-*Briefly describe how you tested your module, and why you chose that approach — clearly enough
-that someone else could carry out the same tests.*
-
-Answer:
+The module is tested with automated Vitest tests. To repeat the run, use `npm ci` followed by `npm run test:run` from the repository root. The current run passed 12 tests in 2 files. Dice rolls are mocked where predictable results are needed.
 
 ## Test Results
 
-**Example** (shows what a filled-in row can look like — remove this example table before
-submitting):
+> [!NOTE]
+> **Character tests — 8 passed**  
+> Source: [`character.test.ts`](src/character/character.test.ts)
+>
+> | What was tested | Test check | Result |
+> | --- | --- | :---: |
+> | Initial HP, minimum roll | Random mocked to `0`; expect 4 HP. | ✅ |
+> | Initial HP, high roll | Random mocked to `0.9`; expect 24 HP. | ✅ |
+> | Current HP on creation | Current HP equals maximum HP. | ✅ |
+> | Non-lethal damage | Apply 4 damage; check HP and alive status. | ✅ |
+> | Lethal damage | Apply 5 damage; check 0 HP and not alive. | ✅ |
+> | Guarding | Armor class increases by 1. | ✅ |
+> | Healing after damage | Heal a damaged player; check HP. | ✅ |
+> | Healing at maximum HP | HP does not exceed the maximum. | ✅ |
 
-| What was tested                                                        | How it was tested                                                                                                       | Result                                                                       |
-| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| `Jpeg.load(path)` returns a `Picture` instance for a valid image file. | Automated unit test (Vitest): loaded `test-image.jpg` and checked that the return value had `getHeight()`/`getWidth()` methods. | ✅ Passed.                                                                    |
-| `Picture.getPixelAt(x, y)` with coordinates outside the image.         | Manual test via the Test-App's interface: entered a coordinate pair larger than the image's width/height and observed the output. | ❌ Didn't throw an error initially — fixed, now throws a clear exception. |
+> [!NOTE]
+> **Fight tests — 4 passed**  
+> Source: [`fightEncounterHandler.test.ts`](src/encounters/fight/fightEncounterHandler.test.ts)
+>
+> | What was tested | Test check | Result |
+> | --- | --- | :---: |
+> | Enemy team defeated | Run fight with an attack; check alive status. | ✅ |
+> | Player team defeated | Skip turns; check alive status. | ✅ |
+> | Player is faster | Mock speeds; check first participant. | ✅ |
+> | Enemy is faster | Mock speeds; check first participant. | ✅ |
 
-**Your test results:**
-
-| What was tested | How it was tested | Result |
-| ---------------- | ------------------ | ------- |
-|                   |                    |         |
-|                   |                    |         |
-|                   |                    |         |
-|                   |                    |         |
-|                   |                    |         |
+> [!WARNING]
+> **Coverage gaps**  
+> The current suite does not directly test `getLivingAllies()`, `getLivingOpponents()`, missed attacks, or healing a dead character.
