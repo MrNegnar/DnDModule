@@ -59,10 +59,10 @@ const answer = readlineSync.question("> ");
 function main(): void {
 
   try {
-    const player1 = new Player("Krulle", 10, 2)
+    const player1 = new Player("Krulle", 10)
     console.log(player1);
-    const enemy1 = new Enemy("Goblin", 8, 1)
-    const enemy2 = new Enemy("Orc", 12, 2)
+    const enemy1 = new Enemy("Goblin", 8)
+    const enemy2 = new Enemy("Orc", 12)
     console.log(enemy1);
     console.log("Starting fight...");
     const playerFighters = [player1];

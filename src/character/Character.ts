@@ -168,8 +168,8 @@ export abstract class Character {
   public attack(target: Character): void {
     let totalDamage = 0;
     let dieResult: number[];
-    checkIfAttackHit = new Dice().checkIfAttackHit();
-    if (new Dice().checkIfAttackHit()) {
+    const attackHit = new Dice().checkIfAttackHit();
+    if (attackHit) {
       dieResult = new Dice().rollDice(this.numberOfAttacks, this.attackPower);
       for (const die of dieResult) {
         totalDamage += die;

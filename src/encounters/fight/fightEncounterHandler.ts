@@ -1,7 +1,7 @@
 import { Player } from "../../character/Player.js";
 import { Enemy } from "../../character/Enemy.js";
 import { Character } from "../../character/Character.js";
-import type { ChoosePlayerAction } from "./fightAction.js";
+import type { ChoosePlayerAction, PlayerFightActions } from "./fightAction.js";
 
 /**
  * Handles the logic for managing fight encounters in the game.
@@ -123,21 +123,31 @@ export class fightEncounterHandler {
     const action = choosePlayerAction(player, livingAllies, livingOpponents);
     const target = this.enemyFighters.find((member) => member.getIsAlive());
     if (target) {
-      switch (action.type) {
-        case "attack":
-          player.attack(action.target);
-          break;
-        case "guard":
-          player.guard();
-          break;
-        case "heal":
-          player.heal(action.target);
-          break;
-        case "skipTurn":
-          break;
-      } 
+      this.executePlayerAction(player, action);
     }
   }
+
+  /**
+   * Executes the specified action for the given player during their turn.
+   *
+   * @param player - The player character performing the action.
+   * @param action - The action to be executed by the player.
+   */
+  private executePlayerAction(player: Player, action: PlayerFightActions): void {
+  switch (action.type) {
+    case "attack":
+      player.attack(action.target);
+      return;
+    case "guard":
+      player.guard();
+      return;
+    case "heal":
+      player.heal(action.target);
+      return;
+    case "skipTurn":
+      return;
+  }
+}
 
   /**
    * Handles the logic for an enemy's turn during the fight encounter.

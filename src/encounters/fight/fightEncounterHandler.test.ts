@@ -11,8 +11,8 @@ describe("fightEncounterHandler", () => {
   it("Fight encounter ends when enemy 'team' is defeated", () => {
     vi.spyOn(Math, "random").mockReturnValue(0.9);
 
-    const player = new Player("Krulle", 30, 1);
-    const enemy = new Enemy("Goblin", 6, 1);
+    const player = new Player("Krulle", 30);
+    const enemy = new Enemy("Goblin", 6);
     const fight = new fightEncounterHandler([player], [enemy]);
 
     fight.startFight(() => ({ type: "attack", target: enemy })); 
@@ -25,8 +25,8 @@ describe("fightEncounterHandler", () => {
     it("Fight encounter ends when player 'team' is defeated", () => {
     vi.spyOn(Math, "random").mockReturnValue(0.9);
 
-    const player = new Player("Krulle", 3, 1);
-    const enemy = new Enemy("Goblin", 30, 1);
+    const player = new Player("Krulle", 3);
+    const enemy = new Enemy("Goblin", 30);
     const fight = new fightEncounterHandler([player], [enemy]);
 
     fight.startFight(() => ({ type: "skipTurn" })); 
@@ -37,8 +37,8 @@ describe("fightEncounterHandler", () => {
   });
 
   it("player starts fight when having a higher speed attribute than the enemy", () => {
-    const player = new Player("Krulle", 10, 1);
-    const enemy = new Enemy("Goblin", 6, 1);
+    const player = new Player("Krulle", 10);
+    const enemy = new Enemy("Goblin", 6);
 
     vi.spyOn(player, "getSpeed").mockReturnValue(2);
     vi.spyOn(enemy, "getSpeed").mockReturnValue(1);
@@ -50,8 +50,8 @@ describe("fightEncounterHandler", () => {
   });
 
     it("enemy starts fight when having a higher speed attribute than the player", () => {
-    const player = new Player("Krulle", 10, 1);
-    const enemy = new Enemy("Goblin", 6, 1);
+    const player = new Player("Krulle", 10);
+    const enemy = new Enemy("Goblin", 6);
 
     vi.spyOn(player, "getSpeed").mockReturnValue(1);
     vi.spyOn(enemy, "getSpeed").mockReturnValue(2);
