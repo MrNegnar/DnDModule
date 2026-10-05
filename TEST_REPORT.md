@@ -11,7 +11,7 @@ The module is tested with automated Vitest tests. To repeat the test run, use `n
 > Source: [`character.test.ts`](src/character/character.test.ts)
 >
 > | What was tested | How it was tested | Result |
-> | --- | --- | :---: |
+> | --------------- | ----------------- | :----: |
 > | Initial HP, minimum roll | Mock `Math.random()` to `0`; expect 4 HP. | ✅ |
 > | Initial HP, high roll | Mock `Math.random()` to `0.9`; expect 24 HP. | ✅ |
 > | Current HP on creation | Compare current HP with maximum HP. | ✅ |
@@ -29,7 +29,7 @@ The module is tested with automated Vitest tests. To repeat the test run, use `n
 > Source: [`fightEncounterHandler.test.ts`](src/encounters/fight/fightEncounterHandler.test.ts)
 >
 > | What was tested | How it was tested | Result |
-> | --- | --- | :---: |
+> | --------------- | ----------------- | :----: |
 > | Fight participant list | Create a fight with two players and two enemies; compare the returned list with all four participants. | ✅ |
 > | Living allies at fight setup | Compare the player's living allies with both players. | ✅ |
 > | Living opponents at fight setup | Compare the player's living opponents with both enemies. | ✅ |
