@@ -8,9 +8,8 @@ export class Player extends Character {
    *
    * @param name - The name of the player character.
    * @param attackPower - The attack power of the player character.
-   * @param attacksPerTurn - The number of attacks the player character can perform per turn.
    */
-  constructor(name: string, attackPower: number, attacksPerTurn: number) {
-    super(name, attackPower, attacksPerTurn, 4, 6);
+  constructor(name: string, attackPower: number) {
+    super(name, attackPower, 4, 6);
   }
 }

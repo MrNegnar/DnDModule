@@ -4,7 +4,7 @@ import readlineSync from "readline-sync";
 import { Player } from "./character/Player.js";
 import { Enemy } from "./character/Enemy.js";
 import { fightEncounterHandler } from "./encounters/fight/fightEncounterHandler.js";
-import type { PlayerFightAction } from "./encounters/fight/fightAction.js";
+import type { PlayerFightActions } from "./encounters/fight/fightAction.js";
 
 
 
@@ -31,7 +31,7 @@ export function parseArgs(argv: string[]): string | undefined {
  * @param livingOpponents - The list of living opponents of the player.
  * @returns The action chosen by the player.
  */
-function askPlayerAction(player: Player, livingAllies: Player[], livingOpponents: Enemy[]): PlayerFightAction {
+function askPlayerAction(player: Player, livingAllies: Player[], livingOpponents: Enemy[]): PlayerFightActions {
   console.log(`${player.getName()}, Choose an action:`);
   console.log("1. Attack");
   console.log("2. Guard");

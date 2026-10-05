@@ -24,7 +24,7 @@ export class Dice {
    * @param maximum - The maximum number of dice that can be rolled.
    * @returns A random number between 1 and the specified maximum, representing the number of dice to roll.
    */
-  public howMManyDice (maximum: number): number {
+  public howManyDice (maximum: number): number {
     return Math.floor(Math.random() * maximum) + 1;
   }
 

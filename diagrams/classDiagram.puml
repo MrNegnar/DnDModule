@@ -3,7 +3,7 @@ Title Class Diagram for dnd module
 
 class Dice {
   +rollDice(quantity: int, sides: int): int[]
-  +howMManyDice(maximum: int): int
+  +howManyDice(maximum: int): int
   +checkIfAttackHit(): boolean
 }
 
@@ -16,7 +16,6 @@ abstract class Character {
   -maxHitPoints: int
   -currentHitPoints: int
   -isAlive: boolean
-  -attacksPerTurn: int
   -attackPower: int
   -numberOfAttacks: int
   -speed: int
@@ -26,7 +25,6 @@ abstract class Character {
   +getMaxHitPoints(): int
   +getCurrentHitPoints(): int
   +getAttackPower(): int
-  +getAttacksPerTurn(): int
   +getArmorClass(): int
   +getSpeed(): int
   +getIsAlive(): boolean
@@ -41,14 +39,14 @@ abstract class Character {
 }
 
 class Player extends Character {
-  +Player(name: string, attackPower: int, attacksPerTurn: int)
+  +Player(name: string, attackPower: int)
 }
 
 class Enemy extends Character {
-  +Enemy(name: string, attackPower: int, attacksPerTurn: int)
+  +Enemy(name: string, attackPower: int)
 }
 
-enum PlayerFightAction {
+enum PlayerFightActions {
   attack
   guard
   heal
@@ -73,9 +71,9 @@ class fightEncounterHandler {
 
 Character --> Dice : rolls
 Character --> Defensive : uses
-Character ..> PlayerFightAction : resolves
+Character ..> PlayerFightActions : resolves
 fightEncounterHandler "1" o-- "many" Player : playerFighters
 fightEncounterHandler "1" o-- "many" Enemy : enemyFighters
-fightEncounterHandler ..> PlayerFightAction : dispatches
+fightEncounterHandler ..> PlayerFightActions : dispatches
 
 @enduml

@@ -8,7 +8,7 @@ A small TypeScript module for running turn-based D&D-style fight encounters: cha
 - **Dice rolling**: a small `Dice` utility rolls arbitrary dice pools (e.g. `4d6` for starting HP) and resolves attack rolls.
 - **Defense**: a separate `Defensive` behavior reduces incoming damage based on a character's armor class.
 - **Fight encounters**: `fightEncounterHandler` manages turn order (by speed), living allies/opponents per side, and runs a fight until one team has no living members left.
-- **Player actions**: a `PlayerFightAction` type (`attack`, `guard`, `heal`, `skipTurn`) lets any caller — a terminal prompt, a test, or a future UI — decide what a player does on their turn, without the fight logic needing to know how that choice was made.
+- **Player actions**: a `PlayerFightActions` type (`attack`, `guard`, `heal`, `skipTurn`) lets any caller — a terminal prompt, a test, or a future UI — decide what a player does on their turn, without the fight logic needing to know how that choice was made.
 
 ## 🛠️ Getting Started
 
@@ -175,7 +175,7 @@ npm run build
 │   │   └── defensive.ts               # Damage mitigation based on armor class
 │   └── encounters/
 │       └── fight/
-│           ├── fightAction.ts             # PlayerFightAction type + ChoosePlayerAction callback type
+│           ├── fightAction.ts             # PlayerFightActions type + ChoosePlayerAction callback type
 │           ├── fightEncounterHandler.ts   # Turn order, targeting, and the fight loop
 │           └── fightEncounterHandler.test.ts
 ├── diagrams/                          # PlantUML class/sequence/system diagrams

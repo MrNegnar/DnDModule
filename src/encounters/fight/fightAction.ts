@@ -1,7 +1,7 @@
 import type { Player } from "../../character/Player.js";
 import type { Enemy } from "../../character/Enemy.js";
 
-export type PlayerFightAction =
+export type PlayerFightActions =
 | { type: "attack"; target: Enemy; }
 | { type: "guard" }
 | { type: "heal"; target: Player; }
@@ -11,4 +11,4 @@ export type ChoosePlayerAction = (
   _player: Player,
   _livingAllies: Player[],
   _livingOpponents: Enemy[]
-) => PlayerFightAction;
+) => PlayerFightActions;

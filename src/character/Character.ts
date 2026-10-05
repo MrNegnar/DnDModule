@@ -8,7 +8,6 @@ export abstract class Character {
   private maxHitPoints!: number;
   private currentHitPoints!: number;
   private isAlive: boolean;
-  private attacksPerTurn: number;
   private attackPower: number;
   private numberOfAttacks: number;
   private speed: number;
@@ -20,15 +19,13 @@ export abstract class Character {
    *
    * @param name - The name of the character.
    * @param attackPower - The attack power of the character.
-   * @param attacksPerTurn - How many attacks that can be done per turn by the character.
    * @param startHpNumberOfDice - The number of dice to roll for determining initial hit points.
    * @param startHpSidesPerDie - The number of sides on each die for determining initial hit points.
    */
-  constructor(name: string, attackPower: number, attacksPerTurn: number, startHpNumberOfDice: number, startHpSidesPerDie: number) {
+  constructor(name: string, attackPower: number, startHpNumberOfDice: number, startHpSidesPerDie: number) {
     this.setName(name);
     this.setInitialHitPoints(startHpNumberOfDice, startHpSidesPerDie);
     this.attackPower = attackPower;
-    this.attacksPerTurn = attacksPerTurn;
     this.numberOfAttacks = 1;
     this.isAlive = true;
     this.speed = 1;
@@ -79,15 +76,6 @@ export abstract class Character {
    */
   public getAttackPower(): number {
     return this.attackPower;
-  }
-
-  /**
-   * Gets the number of attacks the character can perform per turn.
-   *
-   * @returns the number of attacks per turn for the given character.
-   */
-  public getAttacksPerTurn(): number {
-    return this.attacksPerTurn;
   }
 
   /**
@@ -180,6 +168,7 @@ export abstract class Character {
   public attack(target: Character): void {
     let totalDamage = 0;
     let dieResult: number[];
+    checkIfAttackHit = new Dice().checkIfAttackHit();
     if (new Dice().checkIfAttackHit()) {
       dieResult = new Dice().rollDice(this.numberOfAttacks, this.attackPower);
       for (const die of dieResult) {
