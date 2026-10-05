@@ -1,4 +1,5 @@
-import { Defensive } from "../behaviors/defensive.js";
+import { Defensive } from "./behaviorCalculators/defensive.js";
+import { Offensive } from "./behaviorCalculators/offensive.js";
 import { Dice } from "../dice/Dice.js";
 /**
  * Represents a character in the game with basic attributes like name and hit points.
@@ -166,15 +167,11 @@ export abstract class Character {
    * @param target - the target to be attacked.
    */
   public attack(target: Character): void {
-    let totalDamage = 0;
     let dieResult: number[];
-    const attackHit = new Dice().checkIfAttackHit();
+    const attackHit = new Offensive().checkIfHit();
     if (attackHit) {
       dieResult = new Dice().rollDice(this.numberOfAttacks, this.attackPower);
-      for (const die of dieResult) {
-        totalDamage += die;
-      }
-      totalDamage = dieResult.reduce((sum, val) => sum + val, 0);
+      const totalDamage = new Offensive().calculateDamage(dieResult);
       target.defend(totalDamage);
     } else {
       console.log(`${this.getName()}'s attack missed.`);
