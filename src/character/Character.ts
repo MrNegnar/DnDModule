@@ -8,7 +8,6 @@ export abstract class Character {
   private name!: string;
   private maxHitPoints!: number;
   private currentHitPoints!: number;
-  private isAlive: boolean;
   private attackPower: number;
   private numberOfAttacks: number;
   private speed: number;
@@ -28,7 +27,6 @@ export abstract class Character {
     this.setInitialHitPoints(startHpNumberOfDice, startHpSidesPerDie);
     this.attackPower = attackPower;
     this.numberOfAttacks = 1;
-    this.isAlive = true;
     this.speed = 1;
     this.armorClass = 1;
     this.healAmount = 5;
@@ -91,13 +89,10 @@ export abstract class Character {
   /**
    * Checks if the character is alive based on current hit points.
    *
-   * @returns true if the character is alive, false otherwise.
+   * @returns true if the characters health is above 0, false otherwise.
    */
   public getIsAlive(): boolean {
-    if (this.currentHitPoints <= 0) {
-      this.isAlive = false;
-    }
-    return this.isAlive;
+    return this.currentHitPoints > 0;
   }
 
   /**
@@ -145,7 +140,6 @@ export abstract class Character {
    */
   private takeDamage(damage: number): void {
     this.currentHitPoints -= damage;
-    this.getIsAlive();
   }
 
   /**
