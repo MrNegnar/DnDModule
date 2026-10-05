@@ -8,10 +8,9 @@ import type { ChoosePlayerAction, PlayerFightActions } from "./fightAction.js";
  */
 export class fightEncounterHandler {
   
-  public playerFighters: Player[] = [];
-  public enemyFighters: Enemy[] = [];
-  public fightParticipants: Character[] = [];
-  private currentTurnIndex: number = 0;
+  private playerFighters: Player[] = [];
+  private enemyFighters: Enemy[] = [];
+  private fightParticipants: Character[] = [];
 
   /**
    * Initializes the fight encounter handler by combining players and enemies into the fight members list.
@@ -30,8 +29,8 @@ export class fightEncounterHandler {
    *
    * @returns an array of all fight members in the encounter.
    */
-  public getFightMembers(): Character[] {
-    return this.fightParticipants;
+  public getFightMembers(): readonly Character[] {
+    return [...this.fightParticipants];
   }
 
   /**
