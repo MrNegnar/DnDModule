@@ -27,13 +27,4 @@ export class Dice {
   public howManyDice (maximum: number): number {
     return Math.floor(Math.random() * maximum) + 1;
   }
-
-  /**
-   * Checks if an attack hits based on a dice roll.
-   *
-   * @returns true if the attack hits, false otherwise.
-   */
-  public checkIfAttackHit() {
-    return this.rollDice(1, 20)[0] > 10; // Example: hit if roll is greater than 10
-  }
 }
