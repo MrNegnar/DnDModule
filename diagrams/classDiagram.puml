@@ -3,7 +3,6 @@ Title Class Diagram fight module
 
 class Dice {
   +rollDice(quantity: int, sides: int): int[]
-  +howManyDice(maximum: int): int
 }
 
 class Offensive {
@@ -38,7 +37,6 @@ abstract class Character {
   +heal(targetToHeal: Character): void
   -setName(name: string): void
   -setInitialHitPoints(numberOfDice: int, sidesPerDie: int): void
-  -setMaxHitPoints(addingHitPoints: int): void
   -takeDamage(damage: int): void
 }
 
@@ -61,14 +59,15 @@ class ChoosePlayerAction <<function type>> {
   +(_player: Player, _livingAllies: Player[], _livingOpponents: Enemy[]): PlayerFightActions
 }
 
-class fightEncounterHandler {
+class FightEncounterHandler {
   -playerFighters: Player[]
   -enemyFighters: Enemy[]
   -fightParticipants: Character[]
-  +fightEncounterHandler(playerFighters: Player[], enemyFighters: Enemy[])
-  +getFightMembers(): Character[]
+  +FightEncounterHandler(playerFighters: Player[], enemyFighters: Enemy[])
+  +getFightMembers(): readonly Character[]
   +getLivingAllies(currentCharacter: Character): Character[]
   +getLivingOpponents(currentCharacter: Character): Character[]
+  +setupFight(): void
   +startFight(choosePlayerAction: ChoosePlayerAction): void
   -setFightOrder(): void
   -startTurn(choosePlayerAction: ChoosePlayerAction): void
@@ -83,10 +82,10 @@ Enemy --|> Character
 Character ..> Dice : rolls for behavior actions
 Character ..> Offensive : calculates offensive behavior
 Character ..> Defensive : calculates defensive behavior
-fightEncounterHandler "1" o-- "..*" Player : playerFighters
-fightEncounterHandler "1" o-- "..*" Enemy : enemyFighters
-fightEncounterHandler ..> Character : sets order of participants
-fightEncounterHandler ..> ChoosePlayerAction : requests player action
+FightEncounterHandler "1" o-- "..*" Player : playerFighters
+FightEncounterHandler "1" o-- "..*" Enemy : enemyFighters
+FightEncounterHandler ..> Character : sets order of participants
+FightEncounterHandler ..> ChoosePlayerAction : requests player action
 ChoosePlayerAction ..> PlayerFightActions : handles player action input
 PlayerFightActions ..> Player : Performs defensive actions
 PlayerFightActions ..> Enemy : performs offensive actions
