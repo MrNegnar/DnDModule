@@ -102,7 +102,7 @@ npm run typecheck
 
 ### Running Tests
 
-Tests live next to the code they test (e.g. `src/character/character.test.ts`, `src/encounters/fight/FightEncounterHandler.test.ts`), using [Vitest](https://vitest.dev).
+Tests live next to the code they test (e.g. `src/character/character.test.ts`, `src/encounters/fight/fightEncounterHandler.test.ts`), using [Vitest](https://vitest.dev).
 
 - **Interactive watch mode (recommended during development):**
   ```bash
@@ -164,22 +164,23 @@ npm run build
 ```text
 ├── src/
 │   ├── app.ts                         # Demo CLI entry point: sets up and runs a fight
+│   ├── index.ts                       # Public module exports
 │   ├── character/
 │   │   ├── Character.ts               # Abstract base class: HP, attack, defend, guard, heal
 │   │   ├── Player.ts                  # Player character (4d6 starting HP)
 │   │   ├── Enemy.ts                   # Enemy character (4d4 starting HP)
-│   │   └── character.test.ts          # Tests for HP, damage, death, guard and heal
+│   │   ├── character.test.ts          # Tests for HP, damage, death, guard and heal
+│   │   └── behaviorCalculators/
+│   │       ├── offensive.ts           # Hit and damage calculations
+│   │       └── defensive.ts           # Damage mitigation
 │   ├── dice/
 │   │   └── Dice.ts                    # Dice rolling and attack-hit checks
-│   ├── behaviors/
-│   │   └── defensive.ts               # Damage mitigation based on armor class
 │   └── encounters/
 │       └── fight/
 │           ├── fightAction.ts             # PlayerFightActions type + ChoosePlayerAction callback type
 │           ├── FightEncounterHandler.ts   # Turn order, targeting, and the fight loop
-│           └── FightEncounterHandler.test.ts
+│           └── fightEncounterHandler.test.ts
 ├── diagrams/                          # PlantUML class/sequence/system diagrams
-├── test/                              # Integration/system-level tests (higher-level flows)
 ├── dist/                              # Compiled JavaScript output (git-ignored)
 ├── tsconfig.json                      # Base TypeScript config (strict mode)
 ├── tsconfig.build.json                # Build-only config: extends the base, emits to dist/
