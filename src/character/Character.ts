@@ -164,7 +164,7 @@ export abstract class Character {
       const totalDamage = new Offensive().calculateDamage(dieResult)
       target.defend(totalDamage)
     } else {
-      console.log(`${this.getName()}'s attack missed.`)
+      return
     }
   }
 
@@ -175,9 +175,7 @@ export abstract class Character {
    * @param damage - the incoming damage to be processed by the character's defense.
    */
   public defend(damage: number): void {
-    console.log(`Incoming damage: ${damage}`)
     const damageToTake = new Defensive().calculateDamageTaken(damage, this.armorClass)
-    console.log(`Damage to take after defense: ${damageToTake}`)
     this.takeDamage(damageToTake)
   }
 

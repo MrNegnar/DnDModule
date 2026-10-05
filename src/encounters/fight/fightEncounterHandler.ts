@@ -104,7 +104,6 @@ export class FightEncounterHandler {
         if (currentParticipant.getIsAlive() === false) {
           continue
         }
-        console.log(`It's ${currentParticipant.getName()}'s turn.`)
         if (currentParticipant instanceof Player) {
           this.handlePlayerTurn(currentParticipant, choosePlayerAction)
         } else {
@@ -112,7 +111,6 @@ export class FightEncounterHandler {
         }
       }
     }
-    console.log('The fight has ended.')
   }
 
   /**
