@@ -35,5 +35,5 @@ The module is tested with automated Vitest tests. To repeat the test run, use `n
 > | Living opponents at fight setup | Compare the player's living opponents with both enemies. | ✅ |
 > | Enemy team defeated | Mock `Math.random()` to `0.9`, run a fight where the player attacks, and check both alive states. | ✅ |
 > | Player team defeated | Mock `Math.random()` to `0.9`, run a fight where the player skips turns, and check both alive states. | ✅ |
-> | Player has higher speed | Mock participant speeds, call `setupFight()`, and check that the player is first. | ✅ |
-> | Enemy has higher speed | Mock participant speeds, call `setupFight()`, and check that the enemy is first. | ✅ |
+> | Player starts fight | Mock participant speeds, call `setupFight()`, and check that the player is first. | ✅ |
+> | Enemy starts fight | Mock participant speeds, call `setupFight()`, and check that the enemy is first. | ✅ |
