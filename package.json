@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "1DV610 - TypeScript CLI Template / Boilerplate",
   "type": "module",
-  "main": "dist/app.js",
+  "main": "dist/index.js",
   "bin": {
-    "ts-cli-template": "dist/app.js"
+    "ts-cli-template": "dist/index.js"
   },
   "engines": {
     "node": ">=24.12.0"
