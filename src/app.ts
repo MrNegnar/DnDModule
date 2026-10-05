@@ -68,6 +68,7 @@ function main(): void {
     const playerFighters = [player1];
     const enemyFighters = [enemy1, enemy2]; 
     const fight = new fightEncounterHandler(playerFighters, enemyFighters)
+    fight.setupFight();
     fight.startFight(askPlayerAction);
     console.log(fight.getFightMembers());
     for (const member of fight.getFightMembers()) {

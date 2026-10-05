@@ -68,12 +68,18 @@ export class fightEncounterHandler {
   }
 
   /**
-   * Starts the fight encounter by initializing the fight participants and determining the fight order.
+   * Sets up the fight encounter by determining the initial fight order based on the participants' speed attributes.
+   */
+  public setupFight(){
+    this.setFightOrder();
+  }
+
+  /**
+   * Starts the fight encounter by initiating the turn-based sequence of actions for each participant.
    *
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
   public startFight(choosePlayerAction: ChoosePlayerAction) {
-    this.setFightOrder();
     this.startTurn(choosePlayerAction);
   }
 

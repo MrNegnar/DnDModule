@@ -140,6 +140,9 @@ export abstract class Character {
    */
   private takeDamage(damage: number): void {
     this.currentHitPoints -= damage;
+    if (this.currentHitPoints < 0) {
+      this.currentHitPoints = 0;
+    }
   }
 
   /**
@@ -148,11 +151,11 @@ export abstract class Character {
    * @param targetToHeal - The character to be healed.
    */
   public heal(targetToHeal: Character): void {
-    if (targetToHeal && targetToHeal.getIsAlive()) {
-    targetToHeal.currentHitPoints += this.healAmount;
-    if (targetToHeal.currentHitPoints > targetToHeal.maxHitPoints) {
-      targetToHeal.currentHitPoints = targetToHeal.maxHitPoints;
-    }
+    if (targetToHeal.getIsAlive()) {
+      targetToHeal.currentHitPoints += this.healAmount;
+      if (targetToHeal.currentHitPoints > targetToHeal.maxHitPoints) {
+        targetToHeal.currentHitPoints = targetToHeal.maxHitPoints;
+      }
     }
   }
 
