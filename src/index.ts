@@ -4,3 +4,5 @@ export { Enemy } from './character/Enemy.js'
 
 export { FightEncounterHandler } from './encounters/fight/FightEncounterHandler.js'
 export type { ChoosePlayerAction, PlayerFightActions } from './encounters/fight/fightAction.js'
+export type { CharacterInterface } from './character/CharacterInterface.js'
+export type { FightEncounterHandlerInterface } from './encounters/fight/fightEncounterHandlerInterface.js'
