@@ -1,5 +1,3 @@
-import type { Character } from './Character.js'
-
 export interface CharacterInterface {
 
   getName(): string
