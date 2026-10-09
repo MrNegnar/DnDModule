@@ -1,10 +1,11 @@
 import { Defensive } from './behaviorCalculators/defensive.js'
 import { Offensive } from './behaviorCalculators/offensive.js'
 import { Dice } from '../dice/Dice.js'
+import type { CharacterInterface } from './CharacterInterface.js'
 /**
  * Represents a character in the game with basic attributes like name and hit points.
  */
-export abstract class Character {
+export abstract class Character implements CharacterInterface {
   private name!: string
   private maxHitPoints!: number
   private currentHitPoints!: number

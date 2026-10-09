@@ -2,11 +2,12 @@ import { Player } from '../../character/Player.js'
 import { Enemy } from '../../character/Enemy.js'
 import { Character } from '../../character/Character.js'
 import type { ChoosePlayerAction, PlayerFightActions } from './fightAction.js'
+import type { FightEncounterHandlerInterface } from './fightEncounterHandlerInterface.js'
 
 /**
  * Handles the logic for managing fight encounters in the game.
  */
-export class FightEncounterHandler {
+export class FightEncounterHandler implements FightEncounterHandlerInterface {
   private playerFighters: Player[] = []
   private enemyFighters: Enemy[] = []
   private fightParticipants: Character[] = []
