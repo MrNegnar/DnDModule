@@ -54,33 +54,61 @@ Enemies act automatically. The fight continues until either all players or all e
 
 ### Using the Module in Your Own Code
 
-`app.ts` is just a demo. The module itself is just a set of plain classes you can use however you like — for example, to script a fight without any terminal input:
+Import the public classes, interfaces, and action types from the package entry point. The package name in this repository is `ts-cli-template`; use the package name configured for your installation.
 
 ```typescript
-import { Player } from "./character/Player.js";
-import { Enemy } from "./character/Enemy.js";
-import { FightEncounterHandler } from "./encounters/fight/FightEncounterHandler.js";
-import type { ChoosePlayerAction } from "./encounters/fight/fightAction.js";
+import {
+  Enemy,
+  FightEncounterHandler,
+  Player,
+  type CharacterInterface,
+  type ChoosePlayerAction,
+  type FightEncounterHandlerInterface,
+} from 'ts-cli-template'
 
-const player = new Player("Krulle", 10);
-const goblin = new Enemy("Goblin", 8);
-const orc = new Enemy("Orc", 12);
+const player = new Player('Krulle', 10)
+const goblin = new Enemy('Goblin', 8)
+const orc = new Enemy('Orc', 12)
 
-const fight = new FightEncounterHandler([player], [goblin, orc]);
+// CharacterInterface exposes character information through getters.
+const character: CharacterInterface = player
+console.log(`${character.getName()} has ${character.getCurrentHitPoints()} HP`)
 
-// Always have the player attack the first living opponent.
-const alwaysAttack: ChoosePlayerAction = (_player, _livingAllies, livingOpponents) => ({
-  type: "attack",
+// The constructor receives the participants. setupFight() orders them by speed.
+const fight: FightEncounterHandlerInterface = new FightEncounterHandler(
+  [player],
+  [goblin, orc]
+)
+
+fight.setupFight()
+
+// This callback is called each time a player gets a turn.
+// Enemies take their turns automatically and attack the first living player.
+const chooseAction: ChoosePlayerAction = (_currentPlayer, _livingAllies, livingOpponents) => ({
+  type: 'attack',
   target: livingOpponents[0],
-});
+})
 
-fight.setupFight();
-fight.startFight(alwaysAttack);
+// The call runs the fight until one team has no living members.
+fight.startFight(chooseAction)
 
-console.log(`${player.getName()} is alive: ${player.getIsAlive()}`);
+console.log(`${player.getName()} is alive: ${player.getIsAlive()}`)
+console.log(`${goblin.getName()} HP: ${goblin.getCurrentHitPoints()}`)
+console.log(`${orc.getName()} HP: ${orc.getCurrentHitPoints()}`)
 ```
 
-Swap `alwaysAttack` for any function with the same `ChoosePlayerAction` signature — e.g. one that prompts a human, reads from a test fixture, or picks randomly — without touching the fight logic itself.
+`CharacterInterface` contains the getters for reading character information. The concrete `Player` and `Enemy` classes also provide their character methods, such as `attack()`, `heal()`, and `guard()`.
+
+A player action is a `PlayerFightActions` value. Its available options are:
+
+- `{ type: 'attack', target: enemy }`
+- `{ type: 'guard' }`
+- `{ type: 'heal', target: player }`
+- `{ type: 'skipTurn' }`
+
+The `ChoosePlayerAction` callback receives the current player, living allies, and living opponents, then returns one of these actions. It can make a different choice on each player turn. The callback runs inside `startFight()`, so the fight handler continues the whole encounter until it ends.
+
+`FightEncounterHandlerInterface` describes the public fight methods: `setupFight()`, `startFight(...)`, and `getFightMembers()`.
 
 ---
 
