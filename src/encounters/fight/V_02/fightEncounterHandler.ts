@@ -1,8 +1,7 @@
-import { Player } from '../../../character/Player.js'
-import { Enemy } from '../../../character/Enemy.js'
-import { Character } from '../../../character/Character.js'
-import type { ChoosePlayerAction, PlayerFightActions } from '../fightAction.js'
-import type { FightEncounterHandlerInterface } from './fightEncounterHandlerInterface_V_02.js'
+import { CombatantBehavior } from '../../../character/Player.js'
+import type { ChoosePlayerAction, PlayerFightActions } from './fightAction.js'
+import type { FightEncounterHandlerInterface } from './fightEncounterHandlerInterface.js'
+/* Insert any additional imports needed for this file */
 
 /**
  * Handles the logic for managing fight encounters in the game.
