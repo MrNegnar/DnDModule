@@ -1,5 +1,5 @@
 import { CombatantBehavior } from '../../../character/V_02/CombatantBehavior.js'
-import type { ChoosePlayerAction, PlayerFightActions } from './fightAction.js'
+import type { ChoosePlayerAction } from './fightAction.js'
 import type { FightEncounterHandlerInterface } from './fightEncounterHandlerInterface.js'
 
 interface FightParticipant {
@@ -114,9 +114,9 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
           continue
         }
         if (this.playerFighters.some((player) => player === currentParticipant)) {
-          this.handlePlayerTurn(currentParticipant, choosePlayerAction)
+          this.handlePlayerTurn(currentParticipant as TPlayer, choosePlayerAction)
         } else {
-          this.handleEnemyTurn(currentParticipant)
+          this.handleEnemyTurn(currentParticipant as TEnemy)
         }
       }
     }
@@ -133,7 +133,6 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
     const livingAllies = this.playerFighters.filter((member) => member.isAlive())
     const livingOpponents = this.enemyFighters.filter((member) => member.isAlive())
     const action = choosePlayerAction(player, livingAllies, livingOpponents)
-    const target = this.enemyFighters.find((member) => member.isAlive())
       this.combatantBehavior.executePlayerAction(player, action)
   }
 

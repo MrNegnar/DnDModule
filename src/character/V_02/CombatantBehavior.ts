@@ -1,16 +1,16 @@
 import { Defensive } from '.././behaviorCalculators/V_02/defensive.js'
 import { Offensive } from '.././behaviorCalculators/V_02/offensive.js'
 import { Dice } from '../../dice/Dice.js'
-import { PlayerFightActions<TPlayer | TEnemy> } from '../../encounters/fight/V_02/fightAction.js'
+import type { PlayerFightActions } from '../../encounters/fight/V_02/fightAction.js'
 
 /**
  * Represents the combat behavior of a character
  */
 export class CombatantBehavior {
 
-  const dice
-  const defensive
-  const offensive
+  private dice
+  private defensive
+  private offensive
 
   constructor() {
     this.dice = new Dice()
