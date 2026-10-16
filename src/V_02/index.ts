@@ -7,8 +7,8 @@ export { Dice } from '../dice/Dice.js'
 /*
 the used interface for combatant and fight encounter handler
 */
-export type { CharacterInterface } from '../character/CharacterInterface.js'
-export type { FightEncounterHandlerInterface } from '../encounters/fight/fightEncounterHandlerInterface.js'
+export type { combatantBehaviorInterface } from '../character/V_02/combatantBehaviorInterface.js'
+export type { FightEncounterHandlerInterface } from '../encounters/fight/V_02/fightEncounterHandlerInterface.js'
 
 
 /*
