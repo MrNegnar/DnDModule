@@ -1,6 +1,7 @@
 import { Defensive } from '.././behaviorCalculators/defensive.js'
 import { Offensive } from '.././behaviorCalculators/offensive.js'
 import { Dice } from '../../dice/Dice.js'
+import type { PlayerFightActions<TPlayer, TEnemy> } from '../../encounters/fight/V_02/fightAction.js'
 
 /**
  * Represents the combat behavior of a character
@@ -13,13 +14,13 @@ export class CombatantBehavior {
    * @param player - The player character performing the action.
    * @param action - The action to be executed by the player.
    */
-  public executePlayerAction(action: PlayerFightActions): void {
+  public executePlayerAction(action: PlayerFightActions<TPlayer, TEnemy>, player: TPlayer, target: TEnemy): void {
     switch (action.type) {
       case 'attack':
-        this.attack(action.target)
+        this.attack(player, action.target)
         return
       case 'offensiveSpell':
-        this.castOffensiveSpell(action.target)
+        this.castOffensiveSpell(player, action.target)
         return
       case 'raiseArmor':
         this.raiseArmor()
@@ -59,11 +60,12 @@ export class CombatantBehavior {
    *
    * @param target - the target to be attacked.
    */
-  public attack(/* TODO: insert character and enemy reference*/): void {
+  public attack(player: TPlayer, target: TEnemy): void {
     let dieResult: number[]
     const attackHit = new Offensive().checkIfHit(target)
     if (attackHit) {
-      dieResult = new Dice().rollDice(target/* TODO: insert character reference*/)
+      let dieToRoll = [1, (player.strength-9)/2]
+      dieResult = new Dice().rollDice(dieToRoll)
       const totalDamage = new Offensive().calculateDamage(dieResult)
       target.defend(totalDamage)
     } else {
@@ -74,9 +76,11 @@ export class CombatantBehavior {
   /**
    * Casts an offensive spell on the specified target character.
    */
-  public castOffensiveSpell(/* TODO: insert character and enemy reference*/): void {
+  public castOffensiveSpell(player: TPlayer, target: TEnemy): void {
     let dieResult: number[]
-    dieResult = new Dice().rollDice(/* TODO: insert character reference*/)
+    let playerIntelligenceModifier = (player.intelligence-9)/2
+
+    dieResult = new Dice().rollDice(1, playerIntelligenceModifier)
     const totalDamage = new Offensive().calculateDamage(dieResult)
     target.defend(totalDamage)
 
@@ -98,8 +102,8 @@ export class CombatantBehavior {
    * @param damage - the incoming damage to be processed by the character's defense.
    */
   public defend(damage: number): void {
-    const damageToTake = new Defensive().calculateDamageTaken(damage, /* insert character reference */)
-    this.takeDamage(damageToTake)
+    const damageToTake = new Defensive().calculateDamageTaken(damage, )
+    .takeDamage(damageToTake)
   }
 
 }

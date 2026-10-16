@@ -2,6 +2,10 @@ import { CombatantBehavior } from '../../../character/V_02/CombatantBehavior.js'
 import type { ChoosePlayerAction, PlayerFightActions } from './fightAction.js'
 import type { FightEncounterHandlerInterface } from './fightEncounterHandlerInterface.js'
 
+interface FightParticipant {
+  getSpeed(): number
+  isAlive(): boolean
+}
 /**
  * Handles the logic for managing fight encounters in the game.
  */
@@ -70,8 +74,8 @@ export class FightEncounterHandler<TPlayer, TEnemy> implements FightEncounterHan
    * 
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
-  public goThroughFullFight(choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
-    this.setFightOrder(<TPlayer | TEnemy>[])
+  public goThroughFullFight(choosePlayerAction: ChoosePlayerAction) {
+    this.setFightOrder()
     this.startFight(choosePlayerAction)
   }
 
@@ -88,8 +92,8 @@ export class FightEncounterHandler<TPlayer, TEnemy> implements FightEncounterHan
    * Determines the order in which players and enemies will take their turns in the fight encounter.
    * @param fightParticipants The list of which all participants are included (TPlayer and TEnemy)
    */
-  private setFightOrder(fightParticipants: (TPlayer | TEnemy)[]) {
-    this.fightParticipants = fightParticipants
+  private setFightOrder() {
+    this.fightParticipants = this.getFightMembers()
     this.fightParticipants.sort((a, b) => b.getSpeed() - a.getSpeed())
   }
 
@@ -98,7 +102,7 @@ export class FightEncounterHandler<TPlayer, TEnemy> implements FightEncounterHan
    *
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
-  private goThroughTurns(choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
+  private goThroughTurns(choosePlayerAction: ChoosePlayerAction) {
     while (this.shouldFightContinue()) {
       for (let i = 0; i < this.fightParticipants.length; i++) {
         if (!this.shouldFightContinue()) {
