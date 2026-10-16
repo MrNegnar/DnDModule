@@ -20,7 +20,7 @@ export class Offensive {
    * @param damage - An array of individual damage values.
    * @returns The total damage calculated from the array.
    */
-  public calculateDamage(damage: Array<number>): number {
+  public calculateDamage(damage: Array<any>): number {
     let totalDamage = 0
     for (const dmg of damage) {
       totalDamage += dmg

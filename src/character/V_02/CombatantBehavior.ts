@@ -7,6 +7,34 @@ import { Dice } from '../../dice/Dice.js'
  */
 export class CombatantBehavior {
 
+    /**
+   * Executes the specified action for the given player during their turn.
+   *
+   * @param player - The player character performing the action.
+   * @param action - The action to be executed by the player.
+   */
+  private executePlayerAction(action: PlayerFightActions): void {
+    switch (action.type) {
+      case 'attack':
+        player.attack(action.target)
+        return
+      case 'offensiveSpell':
+        player.castOffensiveSpell(action.target)
+        return
+      case 'raiseArmor':
+        player.raiseArmor()
+        return
+      case 'raiseEvasion':
+        player.raiseEvasion()
+        return
+      case 'heal':
+        player.heal(action.target)
+        return
+      case 'skipTurn':
+        return
+    }
+  }
+
   /**
    * Raises the character's armor by 1.
    * Makes a character more resistant to incoming damage.
@@ -47,14 +75,12 @@ export class CombatantBehavior {
    * Casts an offensive spell on the specified target character.
    */
   public castOffensiveSpell(/* TODO: insert character and enemy reference*/): void {
-    // TODO: Implement the logic for casting an offensive spell here
-  }
+    let dieResult: number[]
+    dieResult = new Dice().rollDice(/* TODO: insert character reference*/)
+    const totalDamage = new Offensive().calculateDamage(dieResult)
+    target.defend(totalDamage)
 
-  /**
-   * Casts a defensive spell on the specified target character.
-   */
-  public castDefensiveSpell(/* TODO: insert character and Ally reference*/): void {
-    // TODO: Implement the logic for casting a defensive spell here
+    // TODO: Implement the logic for casting an offensive spell here
   }
 
     /**

@@ -1,6 +1,4 @@
 export { CombatantBehavior } from '../character/V_02/CombatantBehavior.js'
-export { Player } from '../character/Player.js'
-export { Enemy } from '../character/Enemy.js'
 export { Dice } from '../dice/Dice.js'
 export { FightEncounterHandler } from '../encounters/fight/V_02/fightEncounterHandler.js'
 export type { ChoosePlayerAction, PlayerFightActions } from '../encounters/fight/V_02/fightAction.js'

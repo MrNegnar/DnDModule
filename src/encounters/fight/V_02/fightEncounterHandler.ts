@@ -1,4 +1,4 @@
-import { CombatantBehavior } from '../../../character/Player.js'
+import { CombatantBehavior } from '../../../character/V_02/CombatantBehavior.js'
 import type { ChoosePlayerAction, PlayerFightActions } from './fightAction.js'
 import type { FightEncounterHandlerInterface } from './fightEncounterHandlerInterface.js'
 /* Insert any additional imports needed for this file */
@@ -129,29 +129,7 @@ export class FightEncounterHandler implements FightEncounterHandlerInterface {
     const action = choosePlayerAction(player, livingAllies, livingOpponents)
     const target = this.enemyFighters.find((member) => member.getIsAlive())
     if (target) {
-      this.executePlayerAction(player, action)
-    }
-  }
-
-  /**
-   * Executes the specified action for the given player during their turn.
-   *
-   * @param player - The player character performing the action.
-   * @param action - The action to be executed by the player.
-   */
-  private executePlayerAction(player: Player, action: PlayerFightActions): void {
-    switch (action.type) {
-      case 'attack':
-        player.attack(action.target)
-        return
-      case 'guard':
-        player.guard()
-        return
-      case 'heal':
-        player.heal(action.target)
-        return
-      case 'skipTurn':
-        return
+      player.executePlayerAction(action)
     }
   }
 
