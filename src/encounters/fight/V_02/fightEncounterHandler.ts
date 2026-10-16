@@ -129,24 +129,23 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
    * @param player - The player character whose turn is being handled.
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
-  private handlePlayerTurn(player: Player, choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
+  private handlePlayerTurn(player: TPlayer, choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
     const livingAllies = this.playerFighters.filter((member) => member.isAlive())
     const livingOpponents = this.enemyFighters.filter((member) => member.isAlive())
     const action = choosePlayerAction(player, livingAllies, livingOpponents)
     const target = this.enemyFighters.find((member) => member.isAlive())
-    if (target) {
-      this.combatantBehavior.executePlayerAction(action)
-    }
+      this.combatantBehavior.executePlayerAction(player, action)
   }
 
   /**
    * Handles the logic for an enemy's turn during the fight encounter.
    *
+   * @param currentEnemy The character who will perform the action
    */
-  private handleEnemyTurn() {
+  private handleEnemyTurn(currentEnemy: TEnemy) {
     const target = this.playerFighters.find((member) => member.isAlive())
     if (target) {
-      this.combatantBehavior.executeEnemyAction({ type: 'attack', target })
+      this.combatantBehavior.executeEnemyAction(currentEnemy, { type: 'attack', target })
     }
   }
 

@@ -1,4 +1,4 @@
-import { Dice } from '../../dice/Dice.js'
+import { Dice } from '../../../dice/Dice.js'
 
 /**
  * Represents the offensive behavior of a character, including attack and damage calculation.

@@ -1,17 +1,21 @@
 import { Defensive } from '.././behaviorCalculators/V_02/defensive.js'
 import { Offensive } from '.././behaviorCalculators/V_02/offensive.js'
 import { Dice } from '../../dice/Dice.js'
-import { PlayerFightActions } from '../../encounters/fight/V_02/fightAction.js'
+import { PlayerFightActions<TPlayer | TEnemy> } from '../../encounters/fight/V_02/fightAction.js'
 
 /**
  * Represents the combat behavior of a character
  */
 export class CombatantBehavior {
 
+  const dice
+  const defensive
+  const offensive
+
   constructor() {
-    const dice = new Dice()
-    const defensive = new Defensive()
-    const offensive = new Offensive()
+    this.dice = new Dice()
+    this.defensive = new Defensive()
+    this.offensive = new Offensive()
   }
 
     /**
@@ -20,8 +24,7 @@ export class CombatantBehavior {
    * @param player - The player character performing the action.
    * @param action - The action to be executed by the player.
    */
-  public executePlayerAction(
-    action: PlayerFightActions<TPlayer>): void {
+  public executePlayerAction(player: TPlayer, action: PlayerFightActions<TPlayer>): void {
     switch (action.type) {
       case 'attack':
         this.attack(player, action.target)
@@ -36,14 +39,14 @@ export class CombatantBehavior {
         this.raiseEvasion()
         return
       case 'heal':
-        this.heal(player, action.target)
+        this.healing(player, action.target)
         return
       case 'skipTurn':
         return
     }
   }
 
-  public executeEnemyAction(action: PlayerFightActions<TEnemy>): void {
+  public executeEnemyAction(Enemy: TEnemy, action: PlayerFightActions<TEnemy>): void {
     switch (action.type) {
       case 'attack':
         this.attack(PlayerFightActions, action.target)
@@ -58,7 +61,7 @@ export class CombatantBehavior {
         this.raiseEvasion()
         return
       case 'heal':
-        this.heal(PlayerFightActions, action.target)
+        this.healing(PlayerFightActions, action.target)
         return
       case 'skipTurn':
         return
@@ -91,11 +94,11 @@ export class CombatantBehavior {
    */
   public attack(player: TPlayer, target: TEnemy): void {
     let dieResult: number[]
-    const attackHit = offensive.checkIfHit(target)
+    const attackHit = this.offensive.checkIfHit(target)
     if (attackHit) {
-      let dieToRoll = [1, (player.strength-9)/2]
-      dieResult = dice.rollDice(1, dieToRoll)
-      const totalDamage = offensive.calculateDamage(dieResult)
+      let dieToRoll = 1 + player.strengthModifier
+      dieResult = this.dice.rollDice(1, dieToRoll)
+      const totalDamage = this.offensive.calculateDamage(dieResult)
       target.defend(totalDamage)
     } else {
       return
@@ -110,18 +113,10 @@ export class CombatantBehavior {
     let playerIntelligenceModifier = (player.intelligence-9)/2
 
     dieResult = new Dice().rollDice(1, playerIntelligenceModifier)
-    const totalDamage = new Offensive().calculateDamage(dieResult)
-    target.defend(totalDamage)
+    const totalDamage = this.offensive.calculateDamage(dieResult)
+    target.defend(totalDamage, target)
 
     // TODO: Implement the logic for casting an offensive spell here
-  }
-
-  /**
-   * Heals the character by the heal of current character's heal amount.
-   */
-  public heal(player: TPlayer): void {
-    const healAmount = new Defensive().calculateHealApplied(player)
-    // TODO: insert character reference for the healing target
   }
 
     /**
@@ -130,9 +125,9 @@ export class CombatantBehavior {
    *
    * @param damage - the incoming damage to be processed by the character's defense.
    */
-  public defend(damage: number): void {
-    const damageToTake = new Defensive().calculateDamageTaken(damage)
-    this.takeDamage(damageToTake)
+  public defend(damage: number, character: Character<TPlayer | TEnemy>): void {
+    const damageToTake = this.defensive.calculateDamageTaken(damage, character)
+    this.takeDamage(damageToTake, character)
   }
 
   /**
@@ -140,11 +135,21 @@ export class CombatantBehavior {
    *
    * @param damage - The amount of damage to apply to the character.
    */
-  private takeDamage(damage: number): void {
-    this.currentHitPoints -= damage
-    if (this.currentHitPoints < 0) {
-      this.currentHitPoints = 0
+  private takeDamage(damage: number, character: Character<TPlayer | TEnemy>): void {
+    character -= damage
+    if (character.currentHitPoints < 0) {
+      character.currentHitPoints = 0
     }
+  }
+
+  /**
+  * Heals the character by the heal of current character's heal amount.
+  *
+  * @param caster The character who will cast the heal
+  */
+  public healing(caster: Character<TPlayer | TEnemy>, target: Character<TPlayer | TEnemy>): void {
+    const healAmount = new Defensive().calculateHealApplied(caster)
+    // TODO: insert character reference for the healing target
   }
 
 }
