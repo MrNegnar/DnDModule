@@ -149,7 +149,10 @@ export class CombatantBehavior {
   */
   public healing(caster: Character<TPlayer | TEnemy>, target: Character<TPlayer | TEnemy>): void {
     const healAmount = new Defensive().calculateHealApplied(caster)
+    this.heal(target, healAmount)
     // TODO: insert character reference for the healing target
   }
+
+  public heal(target: Character, healAmount: int)
 
 }

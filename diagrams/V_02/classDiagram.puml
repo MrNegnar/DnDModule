@@ -1,0 +1,85 @@
+@startuml classDiagram
+Title Class Diagram fight module
+
+class Dice {
+  +rollDice(quantity: int, sides: int): int[]
+}
+
+class Offensive {
+  +checkIfHit(target: Character): boolean
+  +calculateDamage(damage: int[]): int
+}
+
+class Defensive {
+  +calculateDamageTaken(damage: int, armorClass: int): int
+  +calculateHealApplied(character: Character): int
+}
+
+class CombatantBehavior {
+  +executePlayerAction(Player, action)
+  +executeEnemyAction(Enemy, action)
+  +raiseArmor()
+  +raiseEvasion()
+  +attack(Player, target: Character): void
+  +castOffensiveSpell(player, target: Character)
+  +defend(damage: int, character): void
+  -takeDamage(damage: int): void
+  +healing(caster: Character, targetToHeal: Character): void
+  +heal(target: Character, healamount: int)
+}
+
+class FightEncounterHandler {
+  -playerFighters: TPlayer[]
+  -enemyFighters: TEnemy[]
+  -fightParticipants: Character[]
+  +getFightMemebers(): array
+  +getLivingAllies(currentCharacter: Character): Character<TPlayer | TEnemy>[]
+  +getLivingOpponents(currentCharacter: Character): Character<TPlayer | TEnemy>[]
+  +goThroughFullFight(choosePlayerAction: ChoosePlayerAction<TPlayer | TEnemy>): void
+  -startFight(choosePlayerAction: ChoosePlayerAction): void
+  -setFightOrder(): void
+  -goThroughTurns(choosePlayerAction: ChoosePlayerAction<TPlayer | TEnemy>): void
+  -handlePlayerTurn(player: Player, choosePlayerAction: ChoosePlayerAction): void
+  -handleEnemyTurn(currentEnemy: Character<TEnemy>): void
+  -shouldFightContinue(): boolean
+  -endFight(): void
+}
+
+'==============Object type=================
+
+object PlayerFightActions <<type>> {
+  = "attack" (target: Enemy)
+  = "offensive spell" (target: Enemy)
+  = "Raise armor"
+  = "Raise evasion"
+  = "heal" (target: Player)
+  = "skipTurn"
+}
+
+object ChoosePlayerAction <<type>> {
+  +(_player: Player, _livingAllies: Player[], _livingOpponents: Enemy[]): PlayerFightActions
+}
+
+
+'============Relations===============
+
+CombatantBehavior ..> Dice : rolls for behavior actions
+CombatantBehavior ..> Offensive : calculates offensive behaviors
+CombatantBehavior ..> Defensive : calculates defensive behaviors
+FightEncounterHandler ..> ChoosePlayerAction : requests player action
+ChoosePlayerAction ..> PlayerFightActions : handles player action input
+PlayerFightActions ..> Player : Performs defensive actions
+PlayerFightActions ..> Enemy : performs offensive actions
+
+'=============Notes===============
+
+note top of CombatantBehavior {
+  {TPlayer is the type of Player}
+  {TEnemy is the type of Enemy}
+}
+
+@enduml
+
+
+
+
