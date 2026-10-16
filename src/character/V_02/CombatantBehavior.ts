@@ -13,7 +13,7 @@ export class CombatantBehavior {
    * @param player - The player character performing the action.
    * @param action - The action to be executed by the player.
    */
-  private executePlayerAction(action: PlayerFightActions): void {
+  public executePlayerAction(action: PlayerFightActions): void {
     switch (action.type) {
       case 'attack':
         this.attack(action.target)

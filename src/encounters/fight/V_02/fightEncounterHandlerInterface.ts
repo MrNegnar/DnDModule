@@ -1,7 +1,6 @@
-import type { ChoosePlayerAction } from '../fightAction.js'
-import { Character } from '../../../character/Character.js'
+import type { ChoosePlayerAction } from './fightAction.js'
 
-export interface FightEncounterHandlerInterface {
-  goThroughFullFight(_choosePlayerAction: ChoosePlayerAction): void
-  getFightMembers(): readonly Character[]
+export interface FightEncounterHandlerInterface<TPlayer, TEnemy> {
+  goThroughFullFight(_choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>): void
+  getFightMembers(): readonly (TPlayer | TEnemy)[]
 }
