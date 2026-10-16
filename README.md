@@ -28,7 +28,7 @@ Ensure you have **Node.js** (version 24.12.0 or later, per `engines` in `package
 2. Install dependencies:
 
    ```bash
-   npm install
+   npm install rpg-fight-encounter
    ```
 
 ### Running a Fight
