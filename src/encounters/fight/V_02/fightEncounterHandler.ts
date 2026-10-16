@@ -6,6 +6,7 @@ interface FightParticipant {
   getSpeed(): number
   isAlive(): boolean
 }
+
 /**
  * Handles the logic for managing fight encounters in the game.
  */
@@ -13,6 +14,7 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
   private playerFighters: TPlayer[] = []
   private enemyFighters: TEnemy[] = []
   private fightParticipants: (TPlayer | TEnemy)[] = []
+  combatantBehavior: CombatantBehavior
 
   /**
    * Initializes the fight encounter handler by combining players and enemies into the fight members list.
@@ -24,6 +26,7 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
     this.playerFighters = playerFighters
     this.enemyFighters = enemyFighters
     this.fightParticipants = [...playerFighters, ...enemyFighters]
+    this.combatantBehavior = new CombatantBehavior();
   }
 
   /**
@@ -42,10 +45,10 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
    * @param currentCharacter - The character whose allies are being retrieved. (used to determine the team they belong to)
    * @returns List of team members that are alive
    */
-  public getLivingAllies(currentCharacter: TPlayer | TEnemy): (TPlayer | TEnemy)[] {
-    if (this.playerFighters.includes(currentCharacter)) {
-      return this.playerFighters.filter((playerFighter) => playerFighter.isAlive())
-    } else if (this.enemyFighters.includes(currentCharacter)) {
+  public getLivingAllies(currentCharacter: (TPlayer | TEnemy): (TPlayer | TEnemy)[]) {
+    if (this.playerFighters.some((player) => player === currentCharacter)) {
+      return this.playerFighters.filter((player) => player.isAlive())
+    } else if (this.enemyFighters.some((enemy) => enemy === currentCharacter)) {
       return this.enemyFighters.filter((enemyFighter) => enemyFighter.isAlive())
     } else {
       throw new Error('Character does not belong to any team in this encounter.')
@@ -59,7 +62,7 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
    * @param currentCharacter - The character whose opponents are being retrieved. (used to determine the team they belong to)
    * @returns List of enemy members that are alive
    */
-  public getLivingOpponents(currentCharacter: TPlayer | TEnemy): (TPlayer | TEnemy)[] {
+  public getLivingOpponents(currentCharacter: (TPlayer | TEnemy): (TPlayer | TEnemy)[]) {
     if (this.playerFighters.includes(currentCharacter)) {
       return this.enemyFighters.filter((enemyFighter) => enemyFighter.isAlive())
     } else if (this.enemyFighters.includes(currentCharacter)) {
@@ -74,7 +77,7 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
    * 
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
-  public goThroughFullFight(choosePlayerAction) {
+  public goThroughFullFight(choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
     this.setFightOrder()
     this.startFight(choosePlayerAction)
   }
@@ -132,7 +135,7 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
     const action = choosePlayerAction(player, livingAllies, livingOpponents)
     const target = this.enemyFighters.find((member) => member.isAlive())
     if (target) {
-      CombatantBehavior.executePlayerAction(action, player, target)
+      this.combatantBehavior.executeCharacterAction(player, action)
     }
   }
 
@@ -144,7 +147,7 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
   private handleEnemyTurn(currentEnemy: TEnemy) {
     const target = this.playerFighters.find((member) => member.isAlive())
     if (target) {
-      CombatantBehavior.executeEnemyAction(currentEnemy, target)
+      this.combatantBehavior.executeCharacterAction({ type: 'attack', target }, currentEnemy)
     }
   }
 

@@ -1,7 +1,7 @@
 import { Defensive } from '.././behaviorCalculators/defensive.js'
 import { Offensive } from '.././behaviorCalculators/offensive.js'
 import { Dice } from '../../dice/Dice.js'
-import type { PlayerFightActions<TPlayer, TEnemy> } from '../../encounters/fight/V_02/fightAction.js'
+import { PlayerFightActions<TPlayer, TEnemy> } from '../../encounters/fight/V_02/fightAction.js'
 
 /**
  * Represents the combat behavior of a character
@@ -14,7 +14,7 @@ export class CombatantBehavior {
    * @param player - The player character performing the action.
    * @param action - The action to be executed by the player.
    */
-  public executePlayerAction(action: PlayerFightActions<TPlayer, TEnemy>, player: TPlayer, target: TEnemy): void {
+  public executeCharacterAction(action: PlayerFightActions<TPlayer, TEnemy>, player: TPlayer, target: TEnemy): void {
     switch (action.type) {
       case 'attack':
         this.attack(player, action.target)

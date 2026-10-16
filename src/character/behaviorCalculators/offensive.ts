@@ -9,9 +9,9 @@ export class Offensive {
    *
    * @returns true if the attack hits, false otherwise.
    */
-  public checkIfHit(target) {
+  public checkIfHit() {
     const dice = new Dice()
-    return dice.rollDice(1, 20)[0] > 10 - target.evasion 
+    return dice.rollDice(1, 20)[0] > 10 // Example: hit if roll is greater than 10
   }
 
   /**
@@ -20,7 +20,7 @@ export class Offensive {
    * @param damage - An array of individual damage values.
    * @returns The total damage calculated from the array.
    */
-  public calculateDamage(damage: Array<any>): number {
+  public calculateDamage(damage: Array<number>): number {
     let totalDamage = 0
     for (const dmg of damage) {
       totalDamage += dmg
