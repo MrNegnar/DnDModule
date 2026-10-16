@@ -1,15 +1,14 @@
 import { CombatantBehavior } from '../../../character/V_02/CombatantBehavior.js'
 import type { ChoosePlayerAction, PlayerFightActions } from './fightAction.js'
 import type { FightEncounterHandlerInterface } from './fightEncounterHandlerInterface.js'
-/* Insert any additional imports needed for this file */
 
 /**
  * Handles the logic for managing fight encounters in the game.
  */
-export class FightEncounterHandler implements FightEncounterHandlerInterface {
-  private playerFighters: Player[] = []
-  private enemyFighters: Enemy[] = []
-  private fightParticipants: Character[] = []
+export class FightEncounterHandler<TPlayer, TEnemy> implements FightEncounterHandlerInterface {
+  private playerFighters: TPlayer[] = []
+  private enemyFighters: TEnemy[] = []
+  private fightParticipants: (TPlayer | TEnemy)[] = []
 
   /**
    * Initializes the fight encounter handler by combining players and enemies into the fight members list.
@@ -17,7 +16,7 @@ export class FightEncounterHandler implements FightEncounterHandlerInterface {
    * @param playerFighters - An array of player characters participating in the fight.
    * @param enemyFighters - An array of enemy characters participating in the fight.
    */
-  constructor(playerFighters: Player[], enemyFighters: Enemy[]) {
+  constructor(playerFighters: TPlayer[], enemyFighters: TEnemy[]) {
     this.playerFighters = playerFighters
     this.enemyFighters = enemyFighters
     this.fightParticipants = [...playerFighters, ...enemyFighters]
@@ -28,7 +27,7 @@ export class FightEncounterHandler implements FightEncounterHandlerInterface {
    *
    * @returns an array of all fight members in the encounter.
    */
-  public getFightMembers(): readonly Character[] {
+  public getFightMembers(): readonly (TPlayer | TEnemy)[] {
     return [...this.fightParticipants]
   }
 
@@ -39,7 +38,7 @@ export class FightEncounterHandler implements FightEncounterHandlerInterface {
    * @param currentCharacter - The character whose allies are being retrieved. (used to determine the team they belong to)
    * @returns List of team members that are alive
    */
-  public getLivingAllies(currentCharacter: Character): Character[] {
+  public getLivingAllies(currentCharacter: TPlayer | TEnemy): (TPlayer | TEnemy)[] {
     if (this.playerFighters.includes(currentCharacter)) {
       return this.playerFighters.filter((playerFighter) => playerFighter.getIsAlive())
     } else if (this.enemyFighters.includes(currentCharacter)) {
@@ -56,7 +55,7 @@ export class FightEncounterHandler implements FightEncounterHandlerInterface {
    * @param currentCharacter - The character whose opponents are being retrieved. (used to determine the team they belong to)
    * @returns List of enemy members that are alive
    */
-  public getLivingOpponents(currentCharacter: Character): Character[] {
+  public getLivingOpponents(currentCharacter: TPlayer | TEnemy): (TPlayer | TEnemy)[] {
     if (this.playerFighters.includes(currentCharacter)) {
       return this.enemyFighters.filter((enemyFighter) => enemyFighter.getIsAlive())
     } else if (this.enemyFighters.includes(currentCharacter)) {
@@ -73,7 +72,7 @@ export class FightEncounterHandler implements FightEncounterHandlerInterface {
    */
   public goThroughFullFight(choosePlayerAction: ChoosePlayerAction) {
     this.setFightOrder()
-    this.startFight(choosePlayerAction)
+    this.startFight(choosePlayerAction(<TPlayer | TEnemy>))
   }
 
   /**
@@ -123,13 +122,13 @@ export class FightEncounterHandler implements FightEncounterHandlerInterface {
    * @param player - The player character whose turn is being handled.
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
-  private handlePlayerTurn(player: Player, choosePlayerAction: ChoosePlayerAction) {
+  private handlePlayerTurn(player: TPlayer, choosePlayerAction: ChoosePlayerAction) {
     const livingAllies = this.playerFighters.filter((member) => member.getIsAlive())
     const livingOpponents = this.enemyFighters.filter((member) => member.getIsAlive())
     const action = choosePlayerAction(player, livingAllies, livingOpponents)
     const target = this.enemyFighters.find((member) => member.getIsAlive())
     if (target) {
-      player.executePlayerAction(action)
+      CombatantBehavior.executePlayerAction(action)
     }
   }
 

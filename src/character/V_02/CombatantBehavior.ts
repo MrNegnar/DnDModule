@@ -61,9 +61,9 @@ export class CombatantBehavior {
    */
   public attack(/* TODO: insert character and enemy reference*/): void {
     let dieResult: number[]
-    const attackHit = new Offensive().checkIfHit()
+    const attackHit = new Offensive().checkIfHit(target)
     if (attackHit) {
-      dieResult = new Dice().rollDice(/* TODO: insert character reference*/)
+      dieResult = new Dice().rollDice(target/* TODO: insert character reference*/)
       const totalDamage = new Offensive().calculateDamage(dieResult)
       target.defend(totalDamage)
     } else {

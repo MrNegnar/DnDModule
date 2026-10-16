@@ -15,8 +15,9 @@ export class Defensive {
     return damageTaken
   }
 
-  calculateHealTaken(): number {
-    const newHitPoints = Math.min(currentHitPoints + healAmount, maxHitPoints)
-    return newHitPoints
+  calculateHealTaken(<TCharacter>/* TODO: add parameters such as healAmount */): number {
+    const healingBonus = <TCharacter>().(getwisdom()-9)/2
+    const newHitPoints = Math.min(healAmount + healingBonus)
+    return heal
   }
 }
