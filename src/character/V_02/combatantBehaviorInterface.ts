@@ -3,5 +3,5 @@ export interface combatantBehaviorInterface {
   getMaxHitPoints(): number
   getCurrentHitPoints(): number
   getSpeed(): number
-  getIsAlive(): boolean
+  isAlive(): boolean
 }
