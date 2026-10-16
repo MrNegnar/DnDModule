@@ -14,4 +14,9 @@ export class Defensive {
     const damageTaken = Math.max(0, damage - armorClass) // Assuming 2 is the armor value
     return damageTaken
   }
+
+  calculateHealTaken(): number {
+    const newHitPoints = Math.min(currentHitPoints + healAmount, maxHitPoints)
+    return newHitPoints
+  }
 }

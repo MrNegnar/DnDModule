@@ -16,19 +16,19 @@ export class CombatantBehavior {
   private executePlayerAction(action: PlayerFightActions): void {
     switch (action.type) {
       case 'attack':
-        player.attack(action.target)
+        this.attack(action.target)
         return
       case 'offensiveSpell':
-        player.castOffensiveSpell(action.target)
+        this.castOffensiveSpell(action.target)
         return
       case 'raiseArmor':
-        player.raiseArmor()
+        this.raiseArmor()
         return
       case 'raiseEvasion':
-        player.raiseEvasion()
+        this.raiseEvasion()
         return
       case 'heal':
-        player.heal(action.target)
+        this.heal()
         return
       case 'skipTurn':
         return
@@ -83,18 +83,12 @@ export class CombatantBehavior {
     // TODO: Implement the logic for casting an offensive spell here
   }
 
-    /**
-   * Heals a target character by the heal of current character's heal amount.
-   *
-   * @param targetToHeal - The character to be healed.
+  /**
+   * Heals the character by the heal of current character's heal amount.
    */
   public heal(/* TODO: insert character and healing target reference*/): void {
-    if (targetToHeal.getIsAlive()) {
-      targetToHeal.currentHitPoints += this.healAmount
-      if (targetToHeal.currentHitPoints > targetToHeal.maxHitPoints) {
-        targetToHeal.currentHitPoints = targetToHeal.maxHitPoints
-      }
-    }
+    const healAmount = new Defensive().calculateHealTaken()
+    // TODO: insert character reference for the healing target
   }
 
     /**

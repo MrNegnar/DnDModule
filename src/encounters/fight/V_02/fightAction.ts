@@ -1,15 +1,13 @@
-
-
-export type PlayerFightActions =
-  { type: 'attack'; target: Enemy } |
-  { type: 'offensiveSpell'; target: Enemy } |
+export type PlayerFightActions<TPlayer, TEnemy> =
+  { type: 'attack'; target: TEnemy } |
+  { type: 'offensiveSpell'; target: TEnemy } |
   { type: 'raiseArmor' } |
   { type: 'raiseEvasion' } |
-  { type: 'heal'; target: Player } |
+  { type: 'heal'; target: TPlayer } |
   { type: 'skipTurn' }
 
-export type ChoosePlayerAction = (
-  _player: Player,
-  _livingAllies: Player[],
-  _livingOpponents: Enemy[]
-) => PlayerFightActions
+export type ChoosePlayerAction<TPlayer, TEnemy> = (
+  _player: TPlayer,
+  _livingAllies: TPlayer[],
+  _livingOpponents: TEnemy[]
+) => PlayerFightActions<TPlayer, TEnemy>
