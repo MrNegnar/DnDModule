@@ -1,12 +1,18 @@
-import { Defensive } from '.././behaviorCalculators/defensive.js'
-import { Offensive } from '.././behaviorCalculators/offensive.js'
+import { Defensive } from '.././behaviorCalculators/V_02/defensive.js'
+import { Offensive } from '.././behaviorCalculators/V_02/offensive.js'
 import { Dice } from '../../dice/Dice.js'
-import { PlayerFightActions<TPlayer, TEnemy> } from '../../encounters/fight/V_02/fightAction.js'
+import { PlayerFightActions } from '../../encounters/fight/V_02/fightAction.js'
 
 /**
  * Represents the combat behavior of a character
  */
 export class CombatantBehavior {
+
+  constructor() {
+    const dice = new Dice()
+    const defensive = new Defensive()
+    const offensive = new Offensive()
+  }
 
     /**
    * Executes the specified action for the given player during their turn.
@@ -14,7 +20,8 @@ export class CombatantBehavior {
    * @param player - The player character performing the action.
    * @param action - The action to be executed by the player.
    */
-  public executeCharacterAction(action: PlayerFightActions<TPlayer, TEnemy>, player: TPlayer, target: TEnemy): void {
+  public executePlayerAction(
+    action: PlayerFightActions<TPlayer>): void {
     switch (action.type) {
       case 'attack':
         this.attack(player, action.target)
@@ -29,7 +36,29 @@ export class CombatantBehavior {
         this.raiseEvasion()
         return
       case 'heal':
-        this.heal()
+        this.heal(player, action.target)
+        return
+      case 'skipTurn':
+        return
+    }
+  }
+
+  public executeEnemyAction(action: PlayerFightActions<TEnemy>): void {
+    switch (action.type) {
+      case 'attack':
+        this.attack(PlayerFightActions, action.target)
+        return
+      case 'offensiveSpell':
+        this.castOffensiveSpell(PlayerFightActions, action.target)
+        return
+      case 'raiseArmor':
+        this.raiseArmor()
+        return
+      case 'raiseEvasion':
+        this.raiseEvasion()
+        return
+      case 'heal':
+        this.heal(PlayerFightActions, action.target)
         return
       case 'skipTurn':
         return
@@ -42,7 +71,7 @@ export class CombatantBehavior {
    */
   public raiseArmor(): void {
     // TODO: Reference the character's armor property correctly before incrementing
-    armor += 1;
+    <TCharacter>.armor += 1;
   }
 
   /**
@@ -51,7 +80,7 @@ export class CombatantBehavior {
    */
   public raiseEvasion(): void {
     // TODO: Reference the character's evasion property correctly before incrementing
-    evasion += 1;
+    <TCharacter>.evasion += 1;
   }
 
   /**
@@ -62,11 +91,11 @@ export class CombatantBehavior {
    */
   public attack(player: TPlayer, target: TEnemy): void {
     let dieResult: number[]
-    const attackHit = new Offensive().checkIfHit(target)
+    const attackHit = offensive.checkIfHit(target)
     if (attackHit) {
       let dieToRoll = [1, (player.strength-9)/2]
-      dieResult = new Dice().rollDice(dieToRoll)
-      const totalDamage = new Offensive().calculateDamage(dieResult)
+      dieResult = dice.rollDice(1, dieToRoll)
+      const totalDamage = offensive.calculateDamage(dieResult)
       target.defend(totalDamage)
     } else {
       return
@@ -90,8 +119,8 @@ export class CombatantBehavior {
   /**
    * Heals the character by the heal of current character's heal amount.
    */
-  public heal(/* TODO: insert character and healing target reference*/): void {
-    const healAmount = new Defensive().calculateHealTaken()
+  public heal(player: TPlayer): void {
+    const healAmount = new Defensive().calculateHealApplied(player)
     // TODO: insert character reference for the healing target
   }
 
@@ -102,8 +131,20 @@ export class CombatantBehavior {
    * @param damage - the incoming damage to be processed by the character's defense.
    */
   public defend(damage: number): void {
-    const damageToTake = new Defensive().calculateDamageTaken(damage, )
-    .takeDamage(damageToTake)
+    const damageToTake = new Defensive().calculateDamageTaken(damage)
+    this.takeDamage(damageToTake)
+  }
+
+  /**
+   * lowers the current hit points of the character by the specified damage amount.
+   *
+   * @param damage - The amount of damage to apply to the character.
+   */
+  private takeDamage(damage: number): void {
+    this.currentHitPoints -= damage
+    if (this.currentHitPoints < 0) {
+      this.currentHitPoints = 0
+    }
   }
 
 }

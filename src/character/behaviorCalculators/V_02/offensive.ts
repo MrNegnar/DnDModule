@@ -7,9 +7,10 @@ export class Offensive {
   /**
    * Checks if the attack hits based on a random chance.
    *
+   * @param target the target to be checked if hit.
    * @returns true if the attack hits, false otherwise.
    */
-  public checkIfHit(target) {
+  public checkIfHit(target: Character<TPlayer | TEnemy>) {
     const dice = new Dice()
     return dice.rollDice(1, 20)[0] > 10 - target.evasion 
   }

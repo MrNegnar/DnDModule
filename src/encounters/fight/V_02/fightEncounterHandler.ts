@@ -45,7 +45,7 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
    * @param currentCharacter - The character whose allies are being retrieved. (used to determine the team they belong to)
    * @returns List of team members that are alive
    */
-  public getLivingAllies(currentCharacter: (TPlayer | TEnemy): (TPlayer | TEnemy)[]) {
+  public getLivingAllies(currentCharacter: TPlayer | TEnemy): (TPlayer | TEnemy)[] {
     if (this.playerFighters.some((player) => player === currentCharacter)) {
       return this.playerFighters.filter((player) => player.isAlive())
     } else if (this.enemyFighters.some((enemy) => enemy === currentCharacter)) {
@@ -62,10 +62,10 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
    * @param currentCharacter - The character whose opponents are being retrieved. (used to determine the team they belong to)
    * @returns List of enemy members that are alive
    */
-  public getLivingOpponents(currentCharacter: (TPlayer | TEnemy): (TPlayer | TEnemy)[]) {
-    if (this.playerFighters.includes(currentCharacter)) {
+  public getLivingOpponents(currentCharacter: TPlayer | TEnemy): (TPlayer | TEnemy)[] {
+    if (this.playerFighters.some((player) => player === currentCharacter)) {
       return this.enemyFighters.filter((enemyFighter) => enemyFighter.isAlive())
-    } else if (this.enemyFighters.includes(currentCharacter)) {
+    } else if (this.enemyFighters.some((enemy) => enemy === currentCharacter)) {
       return this.playerFighters.filter((playerFighter) => playerFighter.isAlive())
     } else {
       throw new Error('Character does not belong to any team in this encounter.')
@@ -113,7 +113,7 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
         if (currentParticipant.isAlive() === false) {
           continue
         }
-        if (this.playerFighters.includes(currentParticipant)) {
+        if (this.playerFighters.some((player) => player === currentParticipant)) {
           this.handlePlayerTurn(currentParticipant, choosePlayerAction)
         } else {
           this.handleEnemyTurn(currentParticipant)
@@ -129,25 +129,24 @@ export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy exte
    * @param player - The player character whose turn is being handled.
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    */
-  private handlePlayerTurn(player: TPlayer, choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
+  private handlePlayerTurn(player: Player, choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
     const livingAllies = this.playerFighters.filter((member) => member.isAlive())
     const livingOpponents = this.enemyFighters.filter((member) => member.isAlive())
     const action = choosePlayerAction(player, livingAllies, livingOpponents)
     const target = this.enemyFighters.find((member) => member.isAlive())
     if (target) {
-      this.combatantBehavior.executeCharacterAction(player, action)
+      this.combatantBehavior.executePlayerAction(action)
     }
   }
 
   /**
    * Handles the logic for an enemy's turn during the fight encounter.
    *
-   * @param currentEnemy the current enemy which action will be choosen.
    */
-  private handleEnemyTurn(currentEnemy: TEnemy) {
+  private handleEnemyTurn() {
     const target = this.playerFighters.find((member) => member.isAlive())
     if (target) {
-      this.combatantBehavior.executeCharacterAction({ type: 'attack', target }, currentEnemy)
+      this.combatantBehavior.executeEnemyAction({ type: 'attack', target })
     }
   }
 
