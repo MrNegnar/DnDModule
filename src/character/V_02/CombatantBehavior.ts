@@ -56,7 +56,7 @@ export class CombatantBehavior {
    * @param enemy - The enemy character performing the action.
    * @param action - The action to be executed by the enemy.
    */
-  public executeEnemyAction<TEnemy extends CombatantInterface, TPlayer extends CombatantInterface>(enemy: TEnemy, action: PlayerFightActions<TPlayer, TEnemy> ): void {
+  public executeEnemyAction<TEnemy extends CombatantInterface, TPlayer extends CombatantInterface>(enemy: TEnemy, action: PlayerFightActions<TEnemy, TPlayer> ): void {
     switch (action.type) {
       case 'attack':
         this.attack(enemy, action.target)
@@ -119,11 +119,12 @@ export class CombatantBehavior {
   /**
    * Casts an offensive spell on the specified target character.
    *
-   * @param player - The character casting the offensive spell.
+   * @param caster - The character casting the offensive spell.
    * @param target - The target character to be affected by the offensive spell.
    */
-  public castOffensiveSpell(player: CombatantInterface, target: CombatantInterface): void {
-    const dieResult: number[] = new Dice().rollDice(player.getIntelligenceModifier(), 4)
+  public castOffensiveSpell(caster: CombatantInterface, target: CombatantInterface): void {
+    const diceCount = Math.max(1, caster.getIntelligenceModifier())
+    const dieResult = this.dice.rollDice(diceCount, 4)
     const totalDamage = this.offensive.calculateDamage(dieResult)
     this.defend(totalDamage, target)
   }

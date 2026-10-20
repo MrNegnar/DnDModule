@@ -1,4 +1,4 @@
-import { CombatantInterface } from "../../../character/V_02/CombatantInterface.js";
+import type { CombatantInterface } from "../../../character/V_02/CombatantInterface.js";
 
 export type PlayerFightActions<TPlayer extends CombatantInterface, TEnemy extends CombatantInterface> =
   { type: 'attack'; target: TEnemy } |
