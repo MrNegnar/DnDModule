@@ -1,16 +1,12 @@
 import { CombatantBehavior } from '../../../character/V_02/CombatantBehavior.js'
 import type { ChoosePlayerAction } from './fightAction.js'
 import type { FightEncounterHandlerInterface } from './fightEncounterHandlerInterface.js'
-
-interface FightParticipant {
-  getSpeed(): number
-  isAlive(): boolean
-}
+import type { CombatantInterface } from '../../../character/V_02/CombatantInterface.js'
 
 /**
  * Handles the logic for managing fight encounters in the game.
  */
-export class FightEncounterHandler<TPlayer extends FightParticipant, TEnemy extends FightParticipant> implements FightEncounterHandlerInterface<TPlayer, TEnemy> {
+export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy extends CombatantInterface> implements FightEncounterHandlerInterface<TPlayer, TEnemy> {
   private playerFighters: TPlayer[] = []
   private enemyFighters: TEnemy[] = []
   private fightParticipants: (TPlayer | TEnemy)[] = []

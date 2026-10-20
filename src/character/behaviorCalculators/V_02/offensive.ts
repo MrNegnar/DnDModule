@@ -16,6 +16,18 @@ export class Offensive {
   }
 
   /**
+   * Calculates the damage for an attack based on the attacker's attributes and dice rolls.
+   *
+   * @param attacker The character who will do the attack.
+   * @returns The calculated attack damage.
+   */
+  public calculateAttackDamage(attacker: Character<TPlayer | TEnemy>): number[] {
+    const dice = new Dice()
+    const damageRoll = dice.rollDice(1, 4)
+    return [...damageRoll, attacker.getStrengthModifier()]
+  }
+
+  /**
    * Calculates the total damage from an array of individual damage values.
    *
    * @param damage - An array of individual damage values.

@@ -2,6 +2,7 @@ import { Defensive } from '.././behaviorCalculators/V_02/defensive.js'
 import { Offensive } from '.././behaviorCalculators/V_02/offensive.js'
 import { Dice } from '../../dice/Dice.js'
 import type { PlayerFightActions } from '../../encounters/fight/V_02/fightAction.js'
+import type { CombatantInterface } from './CombatantInterface.js'
 
 /**
  * Represents the combat behavior of a character
@@ -24,7 +25,7 @@ export class CombatantBehavior {
    * @param player - The player character performing the action.
    * @param action - The action to be executed by the player.
    */
-  public executePlayerAction(player: TPlayer, action: PlayerFightActions<TPlayer>): void {
+  public executePlayerAction(player: CombatantInterface, action: PlayerFightActions<CombatantInterface>): void {
     switch (action.type) {
       case 'attack':
         this.attack(player, action.target)
@@ -46,7 +47,7 @@ export class CombatantBehavior {
     }
   }
 
-  public executeEnemyAction(Enemy: TEnemy, action: PlayerFightActions<TEnemy>): void {
+  public executeEnemyAction(Enemy: CombatantInterface, action: PlayerFightActions<CombatantInterface>): void {
     switch (action.type) {
       case 'attack':
         this.attack(PlayerFightActions, action.target)
@@ -92,14 +93,13 @@ export class CombatantBehavior {
    *
    * @param target - the target to be attacked.
    */
-  public attack(player: TPlayer, target: TEnemy): void {
+  public attack(player: CombatantInterface, target: CombatantInterface): void {
     let dieResult: number[]
     const attackHit = this.offensive.checkIfHit(target)
     if (attackHit) {
-      let dieToRoll = 1 + player.strengthModifier
-      dieResult = this.dice.rollDice(1, dieToRoll)
-      const totalDamage = this.offensive.calculateDamage(dieResult)
-      target.defend(totalDamage)
+      const damageRolls = this.offensive.calculateAttackDamage(player)
+      const totalDamage = this.offensive.calculateDamage(damageRolls)
+      this.defend(totalDamage, target)
     } else {
       return
     }
@@ -108,13 +108,11 @@ export class CombatantBehavior {
   /**
    * Casts an offensive spell on the specified target character.
    */
-  public castOffensiveSpell(player: TPlayer, target: TEnemy): void {
+  public castOffensiveSpell(player: CombatantInterface, target: CombatantInterface): void {
     let dieResult: number[]
-    let playerIntelligenceModifier = (player.intelligence-9)/2
-
-    dieResult = new Dice().rollDice(1, playerIntelligenceModifier)
+    dieResult = new Dice().rollDice(player.getIntelligenceModifier(), 4)
     const totalDamage = this.offensive.calculateDamage(dieResult)
-    target.defend(totalDamage, target)
+    this.defend(totalDamage, target)
 
     // TODO: Implement the logic for casting an offensive spell here
   }
@@ -125,7 +123,7 @@ export class CombatantBehavior {
    *
    * @param damage - the incoming damage to be processed by the character's defense.
    */
-  public defend(damage: number, character: Character<TPlayer | TEnemy>): void {
+  public defend(damage: number, character: CombatantInterface): void {
     const damageToTake = this.defensive.calculateDamageTaken(damage, character)
     this.takeDamage(damageToTake, character)
   }
@@ -135,7 +133,7 @@ export class CombatantBehavior {
    *
    * @param damage - The amount of damage to apply to the character.
    */
-  private takeDamage(damage: number, character: Character<TPlayer | TEnemy>): void {
+  private takeDamage(damage: number, character: CombatantInterface): void {
     character -= damage
     if (character.currentHitPoints < 0) {
       character.currentHitPoints = 0
@@ -147,12 +145,12 @@ export class CombatantBehavior {
   *
   * @param caster The character who will cast the heal
   */
-  public healing(caster: Character<TPlayer | TEnemy>, target: Character<TPlayer | TEnemy>): void {
+  public healing(caster: CombatantInterface, target: CombatantInterface): void {
     const healAmount = new Defensive().calculateHealApplied(caster)
     this.heal(target, healAmount)
     // TODO: insert character reference for the healing target
   }
 
-  public heal(target: Character, healAmount: int)
+  public heal(target: CombatantInterface, healAmount: int)
 
 }
