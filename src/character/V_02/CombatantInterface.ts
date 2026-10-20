@@ -8,4 +8,6 @@ export interface CombatantInterface {
   getWisdomModifier(): number
   takeDamage(_amount: number): void
   isAlive(): boolean
+  raiseEvasion(): void
+  raiseArmor(): void
 }

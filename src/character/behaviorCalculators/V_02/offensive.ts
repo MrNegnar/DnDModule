@@ -1,4 +1,5 @@
 import { Dice } from '../../../dice/Dice.js'
+import { CombatantInterface } from '../../V_02/CombatantInterface.js'
 
 /**
  * Represents the offensive behavior of a character, including attack and damage calculation.
@@ -10,9 +11,9 @@ export class Offensive {
    * @param target the target to be checked if hit.
    * @returns true if the attack hits, false otherwise.
    */
-  public checkIfHit(target: Character<TPlayer | TEnemy>) {
+  public checkIfHit(target: CombatantInterface) {
     const dice = new Dice()
-    return dice.rollDice(1, 20)[0] > 10 - target.evasion 
+    return dice.rollDice(1, 20)[0] > 10 - target.getEvasion()
   }
 
   /**
@@ -21,7 +22,7 @@ export class Offensive {
    * @param attacker The character who will do the attack.
    * @returns The calculated attack damage.
    */
-  public calculateAttackDamage(attacker: Character<TPlayer | TEnemy>): number[] {
+  public calculateAttackDamage(attacker: CombatantInterface): number[] {
     const dice = new Dice()
     const damageRoll = dice.rollDice(1, 4)
     return [...damageRoll, attacker.getStrengthModifier()]

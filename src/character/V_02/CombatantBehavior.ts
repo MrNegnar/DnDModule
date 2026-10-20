@@ -13,13 +13,16 @@ export class CombatantBehavior {
   private defensive
   private offensive
 
+  /**
+   * Initializes the combat behavior, including dice, defensive, and offensive calculators.
+   */
   constructor() {
     this.dice = new Dice()
     this.defensive = new Defensive()
     this.offensive = new Offensive()
   }
 
-    /**
+  /**
    * Executes the specified action for the given player during their turn.
    *
    * @param player - The player character performing the action.
@@ -34,10 +37,10 @@ export class CombatantBehavior {
         this.castOffensiveSpell(player, action.target)
         return
       case 'raiseArmor':
-        this.raiseArmor()
+        this.raiseArmor(player)
         return
       case 'raiseEvasion':
-        this.raiseEvasion()
+        this.raiseEvasion(player)
         return
       case 'heal':
         this.healing(player, action.target)
@@ -50,19 +53,19 @@ export class CombatantBehavior {
   public executeEnemyAction(Enemy: CombatantInterface, action: PlayerFightActions<CombatantInterface>): void {
     switch (action.type) {
       case 'attack':
-        this.attack(PlayerFightActions, action.target)
+        this.attack(Enemy, action.target)
         return
       case 'offensiveSpell':
-        this.castOffensiveSpell(PlayerFightActions, action.target)
+        this.castOffensiveSpell(Enemy, action.target)
         return
       case 'raiseArmor':
-        this.raiseArmor()
+        this.raiseArmor(Enemy)
         return
       case 'raiseEvasion':
-        this.raiseEvasion()
+        this.raiseEvasion(Enemy)
         return
       case 'heal':
-        this.healing(PlayerFightActions, action.target)
+        this.healing(Enemy, action.target)
         return
       case 'skipTurn':
         return
@@ -72,29 +75,31 @@ export class CombatantBehavior {
   /**
    * Raises the character's armor by 1.
    * Makes a character more resistant to incoming damage.
+   *
+   * @param character - The character whose armor is being raised.
    */
-  public raiseArmor(): void {
-    // TODO: Reference the character's armor property correctly before incrementing
-    <TCharacter>.armor += 1;
+  public raiseArmor(character: CombatantInterface): void {
+    character.raiseArmor();
   }
 
   /**
    * Raises the character's evasion by 1.
    * Makes a character harder to hit by enemies.
+   *
+   * @param character - The character whose evasion is being raised.
    */
-  public raiseEvasion(): void {
-    // TODO: Reference the character's evasion property correctly before incrementing
-    <TCharacter>.evasion += 1;
+  public raiseEvasion(character: CombatantInterface): void {
+    character.raiseEvasion();
   }
 
   /**
    * Attacks the specified target character.
    * Performs an attack on the target character if the attack hits.
    *
-   * @param target - the target to be attacked.
+   * @param player - The character performing the attack.
+   * @param target - The target character to be attacked.
    */
   public attack(player: CombatantInterface, target: CombatantInterface): void {
-    let dieResult: number[]
     const attackHit = this.offensive.checkIfHit(target)
     if (attackHit) {
       const damageRolls = this.offensive.calculateAttackDamage(player)
@@ -107,6 +112,9 @@ export class CombatantBehavior {
 
   /**
    * Casts an offensive spell on the specified target character.
+   *
+   * @param player - The character casting the offensive spell.
+   * @param target - The target character to be affected by the offensive spell.
    */
   public castOffensiveSpell(player: CombatantInterface, target: CombatantInterface): void {
     let dieResult: number[]
@@ -117,11 +125,12 @@ export class CombatantBehavior {
     // TODO: Implement the logic for casting an offensive spell here
   }
 
-    /**
+  /**
    * The defensive part of an attack.
    * Sums up total damage and calls the take damage method to change targets health.
    *
    * @param damage - the incoming damage to be processed by the character's defense.
+   * @param character - The character whose defense is being applied.
    */
   public defend(damage: number, character: CombatantInterface): void {
     const damageToTake = this.defensive.calculateDamageTaken(damage, character)
@@ -132,21 +141,20 @@ export class CombatantBehavior {
    * lowers the current hit points of the character by the specified damage amount.
    *
    * @param damage - The amount of damage to apply to the character.
+   * @param character - The character who will take the damage.
    */
   private takeDamage(damage: number, character: CombatantInterface): void {
-    character -= damage
-    if (character.currentHitPoints < 0) {
-      character.currentHitPoints = 0
-    }
+    character.takeDamage(damage)
   }
 
-  /**
+ /**
   * Heals the character by the heal of current character's heal amount.
   *
   * @param caster The character who will cast the heal
+  * @param target - The character who will receive the healing.
   */
   public healing(caster: CombatantInterface, target: CombatantInterface): void {
-    const healAmount = new Defensive().calculateHealApplied(caster)
+    const healAmount = this.defensive.calculateHealApplied(caster)
     this.heal(target, healAmount)
     // TODO: insert character reference for the healing target
   }
