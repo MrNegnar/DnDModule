@@ -14,7 +14,7 @@ export class Offensive {
    */
   public checkIfHit(attacker: CombatantInterface, target: CombatantInterface) {
     const dice = new Dice()
-    return dice.rollDice(1, 20)[0] > 10 - target.getEvasion() + attacker.getDexterityModifier()
+    return dice.rollDice(1, 20)[0] > 10 + target.getEvasion() - attacker.getDexterityModifier()
   }
 
   /**
