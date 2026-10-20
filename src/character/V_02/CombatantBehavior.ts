@@ -28,7 +28,7 @@ export class CombatantBehavior {
    * @param player - The player character performing the action.
    * @param action - The action to be executed by the player.
    */
-  public executePlayerAction(player: CombatantInterface, action: PlayerFightActions<CombatantInterface>): void {
+  public executePlayerAction<TPlayer extends CombatantInterface, TEnemy extends CombatantInterface>(player: TPlayer, action: PlayerFightActions<TPlayer, TEnemy> ): void {
     switch (action.type) {
       case 'attack':
         this.attack(player, action.target)
@@ -50,22 +50,28 @@ export class CombatantBehavior {
     }
   }
 
-  public executeEnemyAction(Enemy: CombatantInterface, action: PlayerFightActions<CombatantInterface>): void {
+  /**
+   * Executes the specified action for the given enemy during their turn.
+   *
+   * @param enemy - The enemy character performing the action.
+   * @param action - The action to be executed by the enemy.
+   */
+  public executeEnemyAction<TEnemy extends CombatantInterface, TPlayer extends CombatantInterface>(enemy: TEnemy, action: PlayerFightActions<TPlayer, TEnemy> ): void {
     switch (action.type) {
       case 'attack':
-        this.attack(Enemy, action.target)
+        this.attack(enemy, action.target)
         return
       case 'offensiveSpell':
-        this.castOffensiveSpell(Enemy, action.target)
+        this.castOffensiveSpell(enemy, action.target)
         return
       case 'raiseArmor':
-        this.raiseArmor(Enemy)
+        this.raiseArmor(enemy)
         return
       case 'raiseEvasion':
-        this.raiseEvasion(Enemy)
+        this.raiseEvasion(enemy)
         return
       case 'heal':
-        this.healing(Enemy, action.target)
+        this.healing(enemy, action.target)
         return
       case 'skipTurn':
         return
@@ -117,12 +123,9 @@ export class CombatantBehavior {
    * @param target - The target character to be affected by the offensive spell.
    */
   public castOffensiveSpell(player: CombatantInterface, target: CombatantInterface): void {
-    let dieResult: number[]
-    dieResult = new Dice().rollDice(player.getIntelligenceModifier(), 4)
+    const dieResult: number[] = new Dice().rollDice(player.getIntelligenceModifier(), 4)
     const totalDamage = this.offensive.calculateDamage(dieResult)
     this.defend(totalDamage, target)
-
-    // TODO: Implement the logic for casting an offensive spell here
   }
 
   /**
@@ -159,6 +162,15 @@ export class CombatantBehavior {
     // TODO: insert character reference for the healing target
   }
 
-  public heal(target: CombatantInterface, healAmount: int)
+  /**
+   * Heals the specified target character by the given amount.
+   *
+   * @param target - The character who will receive the healing.
+   * @param healAmount - The amount of healing to apply to the target character.
+   */
+  public heal(target: CombatantInterface, healAmount: number): void {
+    target.takeHealing(healAmount)
+  }
+  
 
 }

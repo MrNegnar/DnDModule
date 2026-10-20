@@ -25,6 +25,9 @@ export class Offensive {
   public calculateAttackDamage(attacker: CombatantInterface): number[] {
     const dice = new Dice()
     const damageRoll = dice.rollDice(1, 4)
+    if (attacker.getStrengthModifier() < 0) {
+      return [...damageRoll]
+    }
     return [...damageRoll, attacker.getStrengthModifier()]
   }
 

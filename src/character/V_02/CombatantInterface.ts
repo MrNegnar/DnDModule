@@ -10,4 +10,5 @@ export interface CombatantInterface {
   isAlive(): boolean
   raiseEvasion(): void
   raiseArmor(): void
+  takeHealing(_amount: number): void
 }

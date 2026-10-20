@@ -1,4 +1,6 @@
-export type PlayerFightActions<TPlayer, TEnemy> =
+import { CombatantInterface } from "../../../character/V_02/CombatantInterface.js";
+
+export type PlayerFightActions<TPlayer extends CombatantInterface, TEnemy extends CombatantInterface> =
   { type: 'attack'; target: TEnemy } |
   { type: 'offensiveSpell'; target: TEnemy } |
   { type: 'raiseArmor' } |
@@ -6,7 +8,7 @@ export type PlayerFightActions<TPlayer, TEnemy> =
   { type: 'heal'; target: TPlayer } |
   { type: 'skipTurn' }
 
-export type ChoosePlayerAction<TPlayer, TEnemy> = (
+export type ChoosePlayerAction<TPlayer extends CombatantInterface, TEnemy extends CombatantInterface> = (
   _player: TPlayer,
   _livingAllies: TPlayer[],
   _livingOpponents: TEnemy[]
