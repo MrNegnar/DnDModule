@@ -159,7 +159,7 @@ export abstract class Character implements CharacterInterface {
    */
   public attack(target: Character): void {
     let dieResult: number[]
-    const attackHit = new Offensive().checkIfHit(<TCharacter>)
+    const attackHit = new Offensive().checkIfHit()
     if (attackHit) {
       dieResult = new Dice().rollDice(this.numberOfAttacks, this.attackPower)
       const totalDamage = new Offensive().calculateDamage(dieResult)
