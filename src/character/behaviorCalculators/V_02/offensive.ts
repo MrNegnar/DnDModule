@@ -8,12 +8,13 @@ export class Offensive {
   /**
    * Checks if the attack hits based on a random chance.
    *
-   * @param target the target to be checked if hit.
+   * @param attacker the character who is performing the attack.
+   * @param target the target character to be checked if hit.
    * @returns true if the attack hits, false otherwise.
    */
-  public checkIfHit(target: CombatantInterface) {
+  public checkIfHit(attacker: CombatantInterface, target: CombatantInterface) {
     const dice = new Dice()
-    return dice.rollDice(1, 20)[0] > 10 - target.getEvasion()
+    return dice.rollDice(1, 20)[0] > 10 - target.getEvasion() + attacker.getDexterityModifier()
   }
 
   /**
@@ -37,7 +38,7 @@ export class Offensive {
    * @param damage - An array of individual damage values.
    * @returns The total damage calculated from the array.
    */
-  public calculateDamage(damage: Array<any>): number {
+  public calculateDamage(damage: number[]): number {
     let totalDamage = 0
     for (const dmg of damage) {
       totalDamage += dmg

@@ -106,7 +106,7 @@ export class CombatantBehavior {
    * @param target - The target character to be attacked.
    */
   public attack(player: CombatantInterface, target: CombatantInterface): void {
-    const attackHit = this.offensive.checkIfHit(target)
+    const attackHit = this.offensive.checkIfHit(player, target)
     if (attackHit) {
       const damageRolls = this.offensive.calculateAttackDamage(player)
       const totalDamage = this.offensive.calculateDamage(damageRolls)
