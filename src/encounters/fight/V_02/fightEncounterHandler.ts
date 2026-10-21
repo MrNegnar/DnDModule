@@ -72,19 +72,21 @@ export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy ex
    * Goes through the full fight encounter by setting up the initial fight order and starting the fight sequence.
    * 
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
+   * @returns The winner of the fight encounter, either a player or an enemy.
    */
-  public goThroughFullFight(choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
+  public goThroughFullFight(choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>): TPlayer | TEnemy {
     this.setFightOrder()
-    this.startFight(choosePlayerAction)
+    return this.startFight(choosePlayerAction)
   }
 
   /**
    * Starts the fight encounter by initiating the turn-based sequence of actions for each participant.
    *
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
+   * @returns The winner of the fight encounter, either a player or an enemy.
    */
-  private startFight(choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
-    this.goThroughTurns(choosePlayerAction)
+  private startFight(choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>): TPlayer | TEnemy {
+    return this.goThroughTurns(choosePlayerAction)
   }
 
   /**
@@ -98,6 +100,7 @@ export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy ex
    * Starts a new turn for each fight participant in the encounter until one side has no living participants.
    *
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
+   * @returns The winner of the fight encounter, either a player or an enemy.
    */
   private goThroughTurns(choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>) {
     while (this.shouldFightContinue()) {
@@ -116,7 +119,7 @@ export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy ex
         }
       }
     }
-    this.endFight()
+    return this.getWinner()
   }
 
   /**
@@ -157,12 +160,22 @@ export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy ex
   }
   /**
    * Handles the logic for ending the fight encounter.
+   * 
+   * @returns The winner of the fight encounter, either a player or an enemy.
    */
-  private endFight() {
-    if (this.playerFighters.some((player) => player.isAlive())) {
-      console.log('Player won the fight!')
-    } else {
-      console.log('Enemy won the fight!')
-    }
+  private getWinner(): TPlayer | TEnemy {
+  const playerWinner = this.playerFighters.find((fighter) => fighter.isAlive())
+
+  if (playerWinner) {
+    return playerWinner
+  }
+
+  const enemyWinner = this.enemyFighters.find((fighter) => fighter.isAlive())
+
+  if (enemyWinner) {
+    return enemyWinner
+  }
+
+  throw new Error('Fight ended without a winner')
   }
 }
