@@ -8,7 +8,6 @@ import type { CombatantInterface } from './CombatantInterface.js'
  * Represents the combat behavior of a character
  */
 export class CombatantBehavior {
-
   private dice
   private defensive
   private offensive
@@ -28,7 +27,10 @@ export class CombatantBehavior {
    * @param player - The player character performing the action.
    * @param action - The action to be executed by the player.
    */
-  public executePlayerAction<TPlayer extends CombatantInterface, TEnemy extends CombatantInterface>(player: TPlayer, action: PlayerFightActions<TPlayer, TEnemy> ): void {
+  public executePlayerAction<TPlayer extends CombatantInterface, TEnemy extends CombatantInterface>(
+    player: TPlayer,
+    action: PlayerFightActions<TPlayer, TEnemy>
+  ): void {
     switch (action.type) {
       case 'attack':
         this.attack(player, action.target)
@@ -56,7 +58,10 @@ export class CombatantBehavior {
    * @param enemy - The enemy character performing the action.
    * @param action - The action to be executed by the enemy.
    */
-  public executeEnemyAction<TEnemy extends CombatantInterface, TPlayer extends CombatantInterface>(enemy: TEnemy, action: PlayerFightActions<TEnemy, TPlayer> ): void {
+  public executeEnemyAction<TEnemy extends CombatantInterface, TPlayer extends CombatantInterface>(
+    enemy: TEnemy,
+    action: PlayerFightActions<TEnemy, TPlayer>
+  ): void {
     switch (action.type) {
       case 'attack':
         this.attack(enemy, action.target)
@@ -85,7 +90,7 @@ export class CombatantBehavior {
    * @param character - The character whose armor is being raised.
    */
   public raiseArmor(character: CombatantInterface): void {
-    character.raiseArmor();
+    character.raiseArmor()
   }
 
   /**
@@ -95,7 +100,7 @@ export class CombatantBehavior {
    * @param character - The character whose evasion is being raised.
    */
   public raiseEvasion(character: CombatantInterface): void {
-    character.raiseEvasion();
+    character.raiseEvasion()
   }
 
   /**
@@ -151,12 +156,12 @@ export class CombatantBehavior {
     character.takeDamage(damage)
   }
 
- /**
-  * Heals the character by the heal of current character's heal amount.
-  *
-  * @param caster The character who will cast the heal
-  * @param target - The character who will receive the healing.
-  */
+  /**
+   * Heals the character by the heal of current character's heal amount.
+   *
+   * @param caster The character who will cast the heal
+   * @param target - The character who will receive the healing.
+   */
   public healing(caster: CombatantInterface, target: CombatantInterface): void {
     const healAmount = this.defensive.calculateHealApplied(caster)
     this.heal(target, healAmount)
@@ -172,6 +177,4 @@ export class CombatantBehavior {
   public heal(target: CombatantInterface, healAmount: number): void {
     target.takeHealing(healAmount)
   }
-  
-
 }

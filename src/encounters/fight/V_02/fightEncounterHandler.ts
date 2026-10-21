@@ -6,7 +6,10 @@ import type { CombatantInterface } from '../../../character/V_02/CombatantInterf
 /**
  * Handles the logic for managing fight encounters in the game.
  */
-export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy extends CombatantInterface> implements FightEncounterHandlerInterface<TPlayer, TEnemy> {
+export class FightEncounterHandler<
+  TPlayer extends CombatantInterface,
+  TEnemy extends CombatantInterface,
+> implements FightEncounterHandlerInterface<TPlayer, TEnemy> {
   private playerFighters: TPlayer[] = []
   private enemyFighters: TEnemy[] = []
   private fightParticipants: (TPlayer | TEnemy)[] = []
@@ -22,7 +25,7 @@ export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy ex
     this.playerFighters = playerFighters
     this.enemyFighters = enemyFighters
     this.fightParticipants = [...playerFighters, ...enemyFighters]
-    this.combatantBehavior = new CombatantBehavior();
+    this.combatantBehavior = new CombatantBehavior()
   }
 
   /**
@@ -70,7 +73,7 @@ export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy ex
 
   /**
    * Goes through the full fight encounter by setting up the initial fight order and starting the fight sequence.
-   * 
+   *
    * @param choosePlayerAction - The function used to determine the player's actions during their turn.
    * @returns The winner of the fight encounter, either a player or an enemy.
    */
@@ -132,7 +135,7 @@ export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy ex
     const livingAllies = this.playerFighters.filter((member) => member.isAlive())
     const livingOpponents = this.enemyFighters.filter((member) => member.isAlive())
     const action = choosePlayerAction(player, livingAllies, livingOpponents)
-      this.combatantBehavior.executePlayerAction(player, action)
+    this.combatantBehavior.executePlayerAction(player, action)
   }
 
   /**
@@ -153,29 +156,26 @@ export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy ex
    * @returns boolean - True if both player and enemy fighters are still alive, indicating the fight is ongoing; otherwise, false.
    */
   private shouldFightContinue(): boolean {
-    return (
-      this.playerFighters.some((player) => player.isAlive()) &&
-      this.enemyFighters.some((enemy) => enemy.isAlive())
-    )
+    return this.playerFighters.some((player) => player.isAlive()) && this.enemyFighters.some((enemy) => enemy.isAlive())
   }
   /**
    * Handles the logic for ending the fight encounter.
-   * 
+   *
    * @returns The winner of the fight encounter, either a player or an enemy.
    */
   private getWinner(): TPlayer | TEnemy {
-  const playerWinner = this.playerFighters.find((fighter) => fighter.isAlive())
+    const playerWinner = this.playerFighters.find((fighter) => fighter.isAlive())
 
-  if (playerWinner) {
-    return playerWinner
-  }
+    if (playerWinner) {
+      return playerWinner
+    }
 
-  const enemyWinner = this.enemyFighters.find((fighter) => fighter.isAlive())
+    const enemyWinner = this.enemyFighters.find((fighter) => fighter.isAlive())
 
-  if (enemyWinner) {
-    return enemyWinner
-  }
+    if (enemyWinner) {
+      return enemyWinner
+    }
 
-  throw new Error('Fight ended without a winner')
+    throw new Error('Fight ended without a winner')
   }
 }
