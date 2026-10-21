@@ -30,7 +30,7 @@ export class FightEncounterHandler<TPlayer extends CombatantInterface, TEnemy ex
    *
    * @returns an array of all fight members in the encounter.
    */
-  public getFightMembers(): readonly (TPlayer | TEnemy)[] {
+  public getFightParticipants(): readonly (TPlayer | TEnemy)[] {
     return [...this.fightParticipants]
   }
 

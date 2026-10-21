@@ -3,5 +3,5 @@ import type { CombatantInterface } from '../../../character/V_02/CombatantInterf
 
 export interface FightEncounterHandlerInterface<TPlayer extends CombatantInterface, TEnemy extends CombatantInterface> {
   goThroughFullFight(_choosePlayerAction: ChoosePlayerAction<TPlayer, TEnemy>): void
-  getFightMembers(): readonly (TPlayer | TEnemy)[]
+  getFightParticipants(): readonly (TPlayer | TEnemy)[]
 }
