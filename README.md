@@ -1,224 +1,153 @@
 # DnD Fight Module
 
-A small TypeScript module for running turn-based D&D-style fight encounters: characters players can attack, guard, heal and take damage until one side is defeated (enemies can only attack and take damage atm.). Built with strict TypeScript, Vitest for testing, and no game UI baked in — any consumer (CLI, tests, or another app) supplies its own way of letting a player choose an action.
+A TypeScript library for running turn-based fantasy combat encounters. This repository contains a reusable **module**, not a standalone game application. It also includes a small command-line demo for the original V01 implementation; the demo is not the purpose or interface of the V02 module.
 
-## ✨ Features
+## Which version should I use?
 
-- **Characters**: `Player` and `Enemy` extend a shared `Character` base class with hit points, attack power, speed, armor class and healing.
-- **Dice rolling**: a small `Dice` utility rolls arbitrary dice pools (e.g. `4d6` for starting HP) and resolves attack rolls.
-- **Defense**: a separate `Defensive` behavior reduces incoming damage based on a character's armor class.
-- **Fight encounters**: `FightEncounterHandler` manages turn order (by speed), living allies/opponents per side, and runs a fight until one team has no living members left.
-- **Player actions**: a `PlayerFightActions` type (`attack`, `guard`, `heal`, `skipTurn`) lets any caller — a terminal prompt, a test, or a future UI — decide what a player does on their turn, without the fight logic needing to know how that choice was made.
+| Version | Status | What it provides |
+| --- | --- | --- |
+| **V01** | **Deprecated** | The original `Character`, `Player`, `Enemy`, and `FightEncounterHandler` implementation. It uses a fixed character model and the original action set. Kept in the repository for reference and compatibility; do not use it for new integrations. The V01 terminal demo can be used to try a simple fight. |
+| **V02** | Current version | A generic fight handler and combat behavior that work with combatant classes supplied by the consuming application. Use this for new integrations. |
 
-## 🛠️ Getting Started
+V01 and V02 are exported side by side from the package entry point. V02 exports use a `V02` suffix where names overlap. `CombatantInterface` is the V02 contract for combatants, even though its name has no version suffix. The npm package version is separate from these source API versions.
 
-### Prerequisites
+## What the module does
 
-Ensure you have **Node.js** (version 24.12.0 or later, per `engines` in `package.json`) and **Git** installed on your machine.
+V02 manages a fight between player-side and enemy-side combatants. It sorts participants by speed, asks the caller to choose an action on each player turn, performs enemy turns automatically, and returns a surviving winner when one side is defeated. Combat calculations include attacks, offensive spells, armor, evasion, and healing.
 
-### Setup
+The module does not provide a game UI, a character creation system, or ready-made V02 player/enemy classes. Your application supplies the combatant objects and decides how to present choices to its users.
 
-1. Clone the repository and move into it:
+## V02: what your application must provide
 
-   ```bash
-   git clone https://github.com/MrNegnar/DnDModule
-   cd DnDModule
-   ```
+Each participant passed to the V02 fight handler must implement `CombatantInterface`:
 
-2. Install dependencies:
+- `getSpeed(): number` — used to order turns (highest speed first).
+- `getArmor(): number` and `getEvasion(): number` — used to reduce damage and determine whether attacks hit.
+- `getStrengthModifier(): number`, `getDexterityModifier(): number`, `getIntelligenceModifier(): number`, and `getWisdomModifier(): number` — used by attack, spell, and healing calculations.
+- `takeDamage(amount: number): void`, `takeHealing(amount: number): void`, and `isAlive(): boolean` — used to update and check combat state.
+- `raiseArmor(): void` and `raiseEvasion(): void` — used by the corresponding player actions.
 
-   ```bash
-   npm install rpg-fight-encounter
-   ```
+The fight handler itself does not require name or hit point getters. Add those to your own classes if your application needs to display participant details.
 
-### Running a Fight
+Your application creates the player and enemy instances and passes them to `FightEncounterHandlerV02`. On each player turn, the callback receives the current player, living allies, and living opponents, then returns one `PlayerFightActionsV02` action:
 
-The demo entry point (`src/app.ts`) sets up a player and a couple of enemies, then runs an interactive fight in the terminal:
+- `{ type: 'attack', target }` — attack a living opponent.
+- `{ type: 'offensiveSpell', target }` — cast an offensive spell on a living opponent.
+- `{ type: 'raiseArmor' }` — increase the player's armor.
+- `{ type: 'raiseEvasion' }` — increase the player's evasion.
+- `{ type: 'heal', target }` — heal a living ally.
+- `{ type: 'skipTurn' }` — take no action.
+
+The callback is a decision point, not a UI. It can read input from a terminal, receive a choice from a web interface, or select actions using your own game rules. Enemies currently attack the first living player automatically.
+
+## Using V02
+
+Install the package in a consuming TypeScript project:
 
 ```bash
-npm start
+npm install rpg-fight-encounter
 ```
 
-During the player's turn you'll be prompted to choose an action, example:
-
-```text
-Krulle, Choose an action:
-1. Attack
-2. Guard
-3. Heal
-4. Skip turn
->
-```
-
-Enemies act automatically. The fight continues until either all players or all enemies are defeated.
-
-### Using the Module in Your Own Code
-
-Import the public classes, interfaces, and action types from the package entry point. The package name in this repository is `ts-cli-template`; use the package name configured for your installation.
+Import V02 explicitly. The example assumes `player` and `goblin` are instances of your own classes implementing `CombatantInterface`:
 
 ```typescript
 import {
-  Enemy,
-  FightEncounterHandler,
-  Player,
-  type CharacterInterface,
-  type ChoosePlayerAction,
-  type FightEncounterHandlerInterface,
-} from 'ts-cli-template'
+  FightEncounterHandlerV02,
+  type ChoosePlayerActionV02,
+  type CombatantInterface,
+} from 'rpg-fight-encounter'
 
-const player = new Player('Krulle', 10)
-const goblin = new Enemy('Goblin', 8)
-const orc = new Enemy('Orc', 12)
+const player: CombatantInterface = createPlayer()
+const goblin: CombatantInterface = createGoblin()
 
-// CharacterInterface exposes character information through getters.
-const character: CharacterInterface = player
-console.log(`${character.getName()} has ${character.getCurrentHitPoints()} HP`)
+const fight = new FightEncounterHandlerV02([player], [goblin])
 
-// The constructor receives the participants. setupFight() orders them by speed.
-const fight: FightEncounterHandlerInterface = new FightEncounterHandler(
-  [player],
-  [goblin, orc]
-)
-
-fight.setupFight()
-
-// This callback is called each time a player gets a turn.
-// Enemies take their turns automatically and attack the first living player.
-const chooseAction: ChoosePlayerAction = (_currentPlayer, _livingAllies, livingOpponents) => ({
+const chooseAction: ChoosePlayerActionV02<CombatantInterface, CombatantInterface> = (
+  _player,
+  _livingAllies,
+  livingOpponents,
+) => ({
   type: 'attack',
   target: livingOpponents[0],
 })
 
-// The call runs the fight until one team has no living members.
-fight.startFight(chooseAction)
-
-console.log(`${player.getName()} is alive: ${player.getIsAlive()}`)
-console.log(`${goblin.getName()} HP: ${goblin.getCurrentHitPoints()}`)
-console.log(`${orc.getName()} HP: ${orc.getCurrentHitPoints()}`)
+const winner = fight.goThroughFullFight(chooseAction)
+console.log('Winner:', winner)
+console.log('Participants:', fight.getFightParticipants())
 ```
 
-`CharacterInterface` contains the getters for reading character information. The concrete `Player` and `Enemy` classes also provide their character methods, such as `attack()`, `heal()`, and `guard()`.
+Replace `createPlayer()` and `createGoblin()` with your own constructors/factories that return objects implementing the required interface. In a real game, use concrete player and enemy types rather than `CombatantInterface` for both generic parameters, so TypeScript can distinguish valid ally and opponent targets.
 
-A player action is a `PlayerFightActions` value. Its available options are:
+`goThroughFullFight()` sets turn order, runs the encounter to completion, and returns the winning combatant. `getFightParticipants()` returns a read-only snapshot of the participants.
 
-- `{ type: 'attack', target: enemy }`
-- `{ type: 'guard' }`
-- `{ type: 'heal', target: player }`
-- `{ type: 'skipTurn' }`
+## V01: deprecated API
 
-The `ChoosePlayerAction` callback receives the current player, living allies, and living opponents, then returns one of these actions. It can make a different choice on each player turn. The callback runs inside `startFight()`, so the fight handler continues the whole encounter until it ends.
+The original API remains available for reference, but is deprecated. It provides concrete `Player` and `Enemy` classes and a different handler flow (`setupFight()` followed by `startFight(...)`). V01 uses the original `CharacterInterface` and `FightEncounterHandlerInterface`; its actions are `attack`, `guard`, `heal`, and `skipTurn`. These types and classes are not interchangeable with V02.
 
-`FightEncounterHandlerInterface` describes the public fight methods: `setupFight()`, `startFight(...)`, and `getFightMembers()`.
+The repository's `src/app.ts` is a terminal demo of V01. It does not demonstrate V02 usage. New code should import the V02 exports listed below and supply its own combatant implementations.
 
----
+## Public V02 exports
 
-## 💻 Available Scripts
+- `CombatantInterface`
+- `FightEncounterHandlerV02`
+- `FightEncounterHandlerInterfaceV02`
+- `CombatantBehavior`
+- `ChoosePlayerActionV02`
+- `PlayerFightActionsV02`
 
-### Running the Application
+The V01 exports (`Player`, `Enemy`, `FightEncounterHandler`, and the unsuffixed action and interface types) remain in the entry point for deprecated compatibility.
 
-```bash
-npm start
-```
+## Project structure
 
-### Type Checking
-
-Runs the TypeScript compiler in check-only mode (no output files), including test files:
-
-```bash
-npm run typecheck
-```
-
-### Running Tests
-
-Tests live next to the code they test (e.g. `src/character/character.test.ts`, `src/encounters/fight/fightEncounterHandler.test.ts`), using [Vitest](https://vitest.dev).
-
-- **Interactive watch mode (recommended during development):**
-  ```bash
-  npm test
-  ```
-- **Single run (e.g. for CI or a quick check):**
-  ```bash
-  npm run test:run
-  ```
-- **Run a specific test file or name pattern:**
-  ```bash
-  npm run test:run -- src/character/character.test.ts
-  ```
-
-Randomness (dice rolls) is made deterministic in tests via `vi.spyOn(Math, "random")`, so outcomes like exact HP values or hit/miss results can be asserted reliably.
-
-### Code Linting
-
-Analyze the source code in `src/` for errors, syntax issues, and anti-patterns:
-
-```bash
-npm run lint
-```
-
-Automatically fix fixable linting issues:
-
-```bash
-npm run lint:fix
-```
-
-### Formatting
-
-Check if files comply with Prettier styling rules:
-
-```bash
-npm run format:check
-```
-
-Automatically reformat all source files:
-
-```bash
-npm run format
-```
-
-### Building
-
-Compiles `src/` to plain JavaScript in `dist/`:
-
-```bash
-npm run build
-```
-
-`dist/` is git-ignored — it's a build artifact, regenerated on demand.
-
----
-
-## 📁 Project Structure
+The V02 files show the current implementation. V01 files are marked as deprecated; `src/app.ts` is a terminal demo of V01. `Dice.ts` is shared by both versions.
 
 ```text
+.
 ├── src/
-│   ├── app.ts                         # Demo CLI entry point: sets up and runs a fight
-│   ├── index.ts                       # Public module exports
-│   ├── character/
-│   │   ├── Character.ts               # Abstract base class: HP, attack, defend, guard, heal
-│   │   ├── Player.ts                  # Player character (4d6 starting HP)
-│   │   ├── Enemy.ts                   # Enemy character (4d4 starting HP)
-│   │   ├── character.test.ts          # Tests for HP, damage, death, guard and heal
-│   │   └── behaviorCalculators/
-│   │       ├── offensive.ts           # Hit and damage calculations
-│   │       └── defensive.ts           # Damage mitigation
+│   ├── app.ts                                      # V01 terminal demo
+│   ├── index.ts                                    # Public exports for V01 and V02
 │   ├── dice/
-│   │   └── Dice.ts                    # Dice rolling and attack-hit checks
+│   │   └── Dice.ts                                 # Dice rolling shared by both versions
+│   ├── character/
+│   │   ├── Character.ts                            # V01 base character (deprecated)
+│   │   ├── CharacterInterface.ts                   # V01 character contract (deprecated)
+│   │   ├── Player.ts                               # V01 player character (deprecated)
+│   │   ├── Enemy.ts                                # V01 enemy character (deprecated)
+│   │   ├── character.test.ts                       # V01 character tests
+│   │   ├── V_02/
+│   │   │   ├── CombatantInterface.ts               # Required V02 combatant contract
+│   │   │   ├── combatantBehaviorInterface.ts        # Read-only behavior contract
+│   │   │   └── CombatantBehavior.ts                 # V02 combat actions and calculations
+│   │   └── behaviorCalculators/
+│   │       ├── offensive.ts                        # V01 attack calculations (deprecated)
+│   │       ├── defensive.ts                        # V01 defense calculations (deprecated)
+│   │       └── V_02/
+│   │           ├── offensive.ts                    # V02 attack calculations
+│   │           └── defensive.ts                    # V02 defense and healing calculations
 │   └── encounters/
 │       └── fight/
-│           ├── fightAction.ts             # PlayerFightActions type + ChoosePlayerAction callback type
-│           ├── FightEncounterHandler.ts   # Turn order, targeting, and the fight loop
-│           └── fightEncounterHandler.test.ts
-├── diagrams/                          # PlantUML class/sequence/system diagrams
-├── dist/                              # Compiled JavaScript output (git-ignored)
-├── tsconfig.json                      # Base TypeScript config (strict mode)
-├── tsconfig.build.json                # Build-only config: extends the base, emits to dist/
-├── package.json                       # Project configuration, scripts, and dependencies
-└── LICENSE                            # Unlicense (Public Domain dedication)
+│           ├── FightEncounterHandler.ts             # V01 fight loop (deprecated)
+│           ├── fightEncounterHandlerInterface.ts    # V01 fight contract (deprecated)
+│           ├── fightAction.ts                      # V01 player actions (deprecated)
+│           ├── fightEncounterHandler.test.ts       # V01 fight tests
+│           └── V_02/
+│               ├── fightEncounterHandler.ts        # V02 fight loop
+│               ├── fightEncounterHandlerInterface.ts # V02 fight contract
+│               └── fightAction.ts                  # V02 actions and callback type
+├── diagrams/
+│   ├── classDiagram.puml                           # V01 design diagram
+│   └── V_02/
+│       └── classDiagram.puml                       # V02 design diagram
+├── package.json                                    # Package metadata and npm scripts
+├── tsconfig.json                                   # TypeScript configuration
+└── tsconfig.build.json                             # Build configuration
 ```
 
----
+## Author
+Created by:
+Thomas Landin
+Second year student at Linnaeus University, Kalmar.
 
-## ⚖️ License
+## License
 
-This project is released into the public domain under the **Unlicense**. You are free to copy, modify, publish, and distribute this code in any way you see fit without any restrictions.
-
+This project is released into the public domain under the **Unlicense**. You are free to copy, modify, publish, and distribute this code without restriction.
