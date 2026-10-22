@@ -97,6 +97,27 @@ The repository's `src/app.ts` is a terminal demo of V01. It does not demonstrate
 
 The V01 exports (`Player`, `Enemy`, `FightEncounterHandler`, and the unsuffixed action and interface types) remain in the entry point for deprecated compatibility.
 
+## V02 test requirements
+
+The V02 test suite must verify the public fight and combat behavior independently of the deprecated V01 classes. Tests should use combatants that implement `CombatantInterface` and cover these requirements:
+
+- Turn order follows descending speed, and player callbacks receive the current player plus only living allies and opponents.
+- Enemy turns attack the first living player automatically. Dead participants do not take turns, and the encounter ends with a living winner when one team is defeated.
+- Each player action works: `attack`, `offensiveSpell`, `raiseArmor`, `raiseEvasion`, `heal`, and `skipTurn`.
+- Attack hit checks use attacker dexterity and target evasion; attack damage uses strength and is reduced by target armor. Offensive spells use intelligence and target armor. Healing uses wisdom and does not exceed the target's hit point limit.
+- Dice-based outcomes are deterministic in tests by controlling `Math.random`; tests must not depend on chance.
+
+Run only the V02 tests with:
+
+```bash
+npm run test:run -- src/character/V_02/CombatantBehavior.test.ts src/encounters/fight/V_02/fightEncounterHandler.test.ts
+```
+
+Run the full project test suite with:
+
+```bash
+npm run test:run
+```
 ## Project structure
 
 The V02 files show the current implementation. V01 files are marked as deprecated; `src/app.ts` is a terminal demo of V01. `Dice.ts` is shared by both versions.
@@ -116,6 +137,7 @@ The V02 files show the current implementation. V01 files are marked as deprecate
 │   │   ├── character.test.ts                       # V01 character tests
 │   │   ├── V_02/
 │   │   │   ├── CombatantInterface.ts               # Required V02 combatant contract
+│   │   │   ├── CombatantBehavior.test.ts         # V02 action and combat behavior tests
 │   │   │   ├── combatantBehaviorInterface.ts        # Read-only behavior contract
 │   │   │   └── CombatantBehavior.ts                 # V02 combat actions and calculations
 │   │   └── behaviorCalculators/
@@ -132,7 +154,8 @@ The V02 files show the current implementation. V01 files are marked as deprecate
 │           ├── fightEncounterHandler.test.ts       # V01 fight tests
 │           └── V_02/
 │               ├── fightEncounterHandler.ts        # V02 fight loop
-│               ├── fightEncounterHandlerInterface.ts # V02 fight contract
+│               ├── fightEncounterHandler.test.ts  # V02 fight flow tests
+│               ├── fightEncounterHandlerInterface.ts   # V02 fight contract
 │               └── fightAction.ts                  # V02 actions and callback type
 ├── diagrams/
 │   ├── classDiagram.puml                           # V01 design diagram
